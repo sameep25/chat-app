@@ -15,3 +15,8 @@ app.listen(PORT ,()=>{
 app.get('/' ,(req,res)=>{
     res.send(`chat-app-server`) ;
 })
+
+// const user = {name:"sameep" ,id:"1"} ; 
+// app.get("/users" ,(req ,res) =>{
+//     res.send(user) ;
+// })
