@@ -1,3 +1,5 @@
+import "./App.css";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // COMPONENTS
@@ -6,12 +8,14 @@ import ChatPage from "./pages/ChatPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={ <Home/> } ></Route>
-        <Route path="/chats" element={ <ChatPage/> } ></Route>
-      </Routes>
-    </BrowserRouter>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/chats" element={<ChatPage />}></Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
