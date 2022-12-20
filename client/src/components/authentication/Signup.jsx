@@ -1,12 +1,13 @@
 import React from "react";
 import { useState } from "react";
 
+import { signupUserApi } from "../../service/userApi.js";
+
 import {
   FormControl,
   Input,
   Box,
   FormGroup,
-  Typography,
   FormLabel,
   styled,
   Button,
@@ -23,10 +24,12 @@ const defaultUser = {
   email: "",
   password: "",
   confirmPassword: "",
-  picture: "",
+  picture: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
 };
 
 const Signup = () => {
+
+  // handling user inputs
   const [userDetails, setUserDetails] = useState(defaultUser);
   const handleChanges = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
@@ -35,11 +38,16 @@ const Signup = () => {
   const picHandle = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.files[0] });
   };
-
+// utils
   const [show, setShow] = useState(false);
   const handleShowPassword = () => {
     setShow(!show);
   };
+
+// calling signupUser api
+  const saveUserData = async () =>{
+    await signupUserApi(userDetails) ;
+  }
 
   return (
     <>
@@ -94,7 +102,7 @@ const Signup = () => {
         </CustomFormControl>
 
         <CustomFormControl id="pic">
-          <FormLabel>Upload your Picture</FormLabel>
+          <FormLabel>Upload your Picture (Optional) </FormLabel>
           <Input
             type="file"
             name="picture"
@@ -104,8 +112,13 @@ const Signup = () => {
           />
         </CustomFormControl>
 
-        <Box sx={{display:"flex" ,justifyContent:"center"}} >
-          <Button sx={{ width:"90%" ,height:"60%" }} size="small" variant="contained">
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            onClick={saveUserData}
+            sx={{ width: "90%", height: "60%" }}
+            size="small"
+            variant="contained"
+          >
             Sign-up
           </Button>
         </Box>
