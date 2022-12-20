@@ -34,7 +34,6 @@ const Login = () => {
   const [userDetails, setUserDetails] = useState(defaultUser);
   const handleChanges = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
-    console.log(userDetails);
   };
 
   const [show, setShow] = useState(false);

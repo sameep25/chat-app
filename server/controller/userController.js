@@ -7,7 +7,7 @@ import generateToken from "../config/generateToken.js";
 export const registerUser = async (req, res) => {
   try {
 
-    const {name ,email ,password} = req.body ;
+    const {name ,email ,password ,picture} = req.body ;
     const userExists = await User.findOne({ email });
     if (userExists) {
       res.status(400);
@@ -16,7 +16,7 @@ export const registerUser = async (req, res) => {
 
     // const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password ,10) ; // 2nd arg is by-default is salt
-    const user = { name: name ,email: email ,password: hashedPassword }
+    const user = { name: name ,email: email ,password: hashedPassword, picture:picture }
 
     const newUser = new User(user); //varifying schema of user
     if (newUser) {
