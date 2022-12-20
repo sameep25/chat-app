@@ -45,7 +45,7 @@ const Signup = () => {
   };
 
 // calling signupUser api
-  const saveUserData = async () =>{
+  const signupUser = async () =>{
     await signupUserApi(userDetails) ;
   }
 
@@ -114,7 +114,7 @@ const Signup = () => {
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button
-            onClick={saveUserData}
+            onClick={signupUser}
             sx={{ width: "90%", height: "60%" }}
             size="small"
             variant="contained"

@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { loginUserApi } from "../../service/userApi";
 
 import {
   FormControl,
@@ -18,13 +19,13 @@ const CustomFormControl = styled(FormControl)`
   }
 `;
 const defaultUser = {
-  name: "",
+  // name: "",
   email: "",
   password: "",
 };
 
 const guestUser = {
-  name: "Guest",
+  // name: "Guest",
   email: "guest@exapmle.com",
   password: "123456",
 };
@@ -41,15 +42,21 @@ const Login = () => {
     setShow(!show);
   };
 
+  // handle guest user details
   const setGuestUser = () => {
     setUserDetails(guestUser);
-    console.log(defaultUser);
+    // console.log(defaultUser);
   };
+
+  // hitting loginUserapi
+  const loginUser = async() =>{
+    await loginUserApi(userDetails) ;
+  }
 
   return (
     <>
       <FormGroup sx={{ minWidth: "80%", margin: "auto" }}>
-        <CustomFormControl required>
+        {/* <CustomFormControl required>
           <FormLabel>Name</FormLabel>
           <Input
             name="name"
@@ -57,7 +64,7 @@ const Login = () => {
             placeholder="Enter your name"
             onChange={(e) => handleChanges(e)}
           />
-        </CustomFormControl>
+        </CustomFormControl> */}
 
         <CustomFormControl required>
           <FormLabel>Email</FormLabel>
@@ -88,6 +95,7 @@ const Login = () => {
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button
+            onClick={loginUser}
             sx={{ width: "90%", height: "60%" }}
             size="small"
             variant="contained"
