@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 
 import Connection from "./database/db.js";
 import userRoutes from "./routes/userRoutes.js"
+import { notFound ,errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
 app.use(cors());
@@ -26,6 +27,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
+
+app.use(notFound)
+app.use(errorHandler)
 
 // const user = {name:"sameep" ,id:"1"} ;
 // app.get("/users" ,(req ,res) =>{
