@@ -6,7 +6,7 @@ const URL = "http://localhost:8000/api/user" ;
 
 export const signupUserApi = async(userData) =>{
     try{
-        axios.post(`${URL}/signup` ,userData) ;
+        return axios.post(`${URL}/signup` ,userData) ;
     }catch(error){
         console.log("Error while calling signupUser Api" ,error);
     }
@@ -14,7 +14,7 @@ export const signupUserApi = async(userData) =>{
 
 export const loginUserApi = async(userData) =>{
     try{
-         await axios.post(`${URL}/login`,userData) ;
+        return axios.post(`${URL}/login`,userData) ;
     }catch(error){
         console.log("Error while calling loginUserApi ",error);
     }

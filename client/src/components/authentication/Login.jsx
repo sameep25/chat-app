@@ -1,7 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { loginUserApi } from "../../service/userApi";
+import { useNavigate } from "react-router-dom";
 
+import { LoadingButton } from "@mui/lab";
 import {
   FormControl,
   Input,
@@ -10,6 +12,8 @@ import {
   FormLabel,
   styled,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 const CustomFormControl = styled(FormControl)`
@@ -19,18 +23,18 @@ const CustomFormControl = styled(FormControl)`
   }
 `;
 const defaultUser = {
-  // name: "",
   email: "",
   password: "",
 };
 
 const guestUser = {
-  // name: "Guest",
   email: "guest@exapmle.com",
   password: "123456",
 };
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [userDetails, setUserDetails] = useState(defaultUser);
   const handleChanges = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
@@ -44,27 +48,44 @@ const Login = () => {
   // handle guest user details
   const setGuestUser = () => {
     setUserDetails(guestUser);
-    // console.log(defaultUser);
   };
 
+  // alert
+  const [loading, setLoading] = useState(false);
+  const [alertType, setAlertType] = useState("info");
+  const [alertTitle, setAlertTitle] = useState("");
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setLoading(false);
+  };
   // hitting loginUserapi
-  const loginUser = async() =>{
-    await loginUserApi(userDetails) ;
-  }
+  const loginUser = async () => {
+    setLoading(true);
+    if (userDetails.email === "" || userDetails.password === "") {
+      setAlertType("warning");
+      setAlertTitle("Please fill all the fields");
+      return;
+    }
+
+    try {
+      const { data } = await loginUserApi(userDetails);
+      // console.log(data);
+      setAlertTitle("Registration successfull !");
+      setAlertType("success");
+
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      navigate("/chats");
+    } catch (error) {
+      setAlertTitle(error.response.data.message);
+      setAlertType("error");
+    }
+  };
 
   return (
     <>
       <FormGroup sx={{ minWidth: "80%", margin: "auto" }}>
-        {/* <CustomFormControl required>
-          <FormLabel>Name</FormLabel>
-          <Input
-            name="name"
-            value={userDetails.name}
-            placeholder="Enter your name"
-            onChange={(e) => handleChanges(e)}
-          />
-        </CustomFormControl> */}
-
         <CustomFormControl required>
           <FormLabel>Email</FormLabel>
           <Input
@@ -93,14 +114,15 @@ const Login = () => {
         </CustomFormControl>
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Button
+          <LoadingButton
+            loading={loading}
             onClick={loginUser}
             sx={{ width: "90%", height: "60%" }}
             size="small"
             variant="contained"
           >
             Login
-          </Button>
+          </LoadingButton>
         </Box>
 
         <Box
@@ -116,6 +138,12 @@ const Login = () => {
           </Button>
         </Box>
       </FormGroup>
+
+      <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
+        <Alert severity={alertType} sx={{ width: "100%" }}>
+          {alertTitle}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

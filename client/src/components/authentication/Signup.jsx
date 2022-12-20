@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { signupUserApi, uploadImageApi } from "../../service/userApi.js";
 import { LoadingButton } from "@mui/lab";
@@ -12,8 +13,8 @@ import {
   styled,
   Button,
   Snackbar,
+  Alert,
 } from "@mui/material";
-import Alert from "@mui/material/Alert";
 
 // MUI Custom Components
 const CustomFormControl = styled(FormControl)`
@@ -34,6 +35,7 @@ const defaultUser = {
 };
 
 const Signup = () => {
+  const navigate = useNavigate();
   // handling user inputs
   const [userDetails, setUserDetails] = useState(defaultUser);
   const handleChanges = (e) => {
@@ -50,7 +52,7 @@ const Signup = () => {
   //pic utils
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
-  const [alertTitle, setAlertTitle] = useState("Upload an Image");
+  const [alertTitle, setAlertTitle] = useState("");
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -92,7 +94,34 @@ const Signup = () => {
 
   // calling signupUser api
   const signupUser = async () => {
-    await signupUserApi(userDetails);
+    setLoading(true);
+    const { password, confirmPassword } = userDetails;
+
+    for (const [key, value] of Object.entries(userDetails)) {
+      if (value === "") {
+        setAlertType("warning");
+        setAlertTitle("Please fill all the fields");
+        return;
+      }
+    }
+
+    if (password !== confirmPassword) {
+      setAlertTitle("Passwords do not Match");
+      setAlertType("error");
+      return;
+    }
+
+    try {
+      const { data } = await signupUserApi(userDetails);
+      setAlertTitle("Registration successfull !");
+      setAlertType("success");
+
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      navigate("/chats");
+    } catch (error) {
+      setAlertTitle(error.response.data.message);
+      setAlertType("error");
+    }
   };
 
   return (
@@ -100,20 +129,26 @@ const Signup = () => {
       <FormGroup sx={{ minWidth: "80%", margin: "auto" }}>
         <CustomFormControl required>
           <FormLabel>Name</FormLabel>
-          <Input
-            name="name"
-            placeholder="Enter your name"
-            onChange={(e) => handleChanges(e)}
-          />
+          <Box>
+            <Input
+              fullWidth
+              name="name"
+              placeholder="Enter your name"
+              onChange={(e) => handleChanges(e)}
+            />
+          </Box>
         </CustomFormControl>
 
         <CustomFormControl required>
           <FormLabel>Email</FormLabel>
-          <Input
-            name="email"
-            placeholder="Enter your email"
-            onChange={(e) => handleChanges(e)}
-          />
+          <Box>
+            <Input
+              fullWidth
+              name="email"
+              placeholder="Enter your email"
+              onChange={(e) => handleChanges(e)}
+            />
+          </Box>
         </CustomFormControl>
 
         <CustomFormControl required>
@@ -133,7 +168,7 @@ const Signup = () => {
         </CustomFormControl>
 
         <CustomFormControl required>
-          <FormLabel>confirm-Password</FormLabel>
+          <FormLabel>Confirm-Password</FormLabel>
           <Box>
             <Input
               type={show ? "text" : "password"}
@@ -156,16 +191,6 @@ const Signup = () => {
             placeholder="Add your image"
             onChange={(e) => picHandle(e)}
           />
-
-          <Snackbar
-            open={loading}
-            autoHideDuration={4000}
-            onClose={handleClose}
-          >
-            <Alert severity={alertType} sx={{ width: "100%" }}>
-              {alertTitle}
-            </Alert>
-          </Snackbar>
         </CustomFormControl>
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -180,6 +205,12 @@ const Signup = () => {
           </LoadingButton>
         </Box>
       </FormGroup>
+
+      <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
+        <Alert severity={alertType} sx={{ width: "100%" }}>
+          {alertTitle}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
