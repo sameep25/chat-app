@@ -71,3 +71,35 @@ export const fetchChat = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// creating a new group-chat
+export const createGroupChat = async (req, res) => {
+  try {
+    if (!req.body.users || !req.body.name) {
+      throw new Error("Please fill all the fields");
+    }
+
+    let users = JSON.parse(req.body.users); //users array in stigify format needs to be parsed in json format
+    if (users.length < 2) {
+      throw new Error("More then 2 users required to make group-chat");
+    }
+    users.push(req.user); //pushing loggedin user to users arr (group)
+
+    // creating new group chat in db
+    const groupChat = await Chat.create({
+      chatName: req.body.name,
+      users: users,
+      isGroupChat: true,
+      groupAdmin: req.user,
+    });
+
+    // populating the created chat to send back to user
+    const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    res.status(200).json(fullGroupChat);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
