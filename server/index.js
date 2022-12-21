@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 
 import Connection from "./database/db.js";
 import userRoutes from "./routes/userRoutes.js"
+import chatRoutes from "./routes/chatRoutes.js";
 import { notFound ,errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
@@ -27,6 +28,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
+
+app.use("/api/chat", chatRoutes) ;
 
 app.use(notFound)
 app.use(errorHandler)
