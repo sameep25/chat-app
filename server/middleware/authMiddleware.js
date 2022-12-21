@@ -15,7 +15,7 @@ export const protect = async (req, res, next) => {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await User.findById(decodedToken.id).select("-password"); //return user without password
       next();
-        return ;
+      return;
     }
     if (token) {
       throw new Error("Not authorized ,token failed");

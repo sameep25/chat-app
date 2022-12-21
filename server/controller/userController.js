@@ -58,12 +58,13 @@ export const authUser = async (req, res) => {
 //  https://www.mongodb.com/docs/manual/reference/operator/query/regex/
 export const getUsers = async(req ,res) =>{
   try{
-    const keyword = req.query ? { //searching users by their name or email using query params
+    const keyword = req.query.search ? { //searching users by their name or email using query params
       "$or": [                                    
-        {name : { $regex: req.query.name ,$options:"<i>" } } ,
-        {email : { $regex: req.query.email ,$options:"<i>" } }
+        {name : { $regex: req.query.search ,$options:"<i>" } } ,
+        {email : { $regex: req.query.search ,$options:"<i>" } }
       ]
     }:{} ;
+    console.log(keyword.$or);
 
     // find all users except the user ie. logged-in
     const users =  await User.find(keyword).find({_id : {$ne : req.user._id} })  ; // $ne -> not equals(mongodb operator)
