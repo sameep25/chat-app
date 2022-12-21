@@ -75,6 +75,7 @@ export const fetchChat = async (req, res) => {
 // creating a new group-chat
 export const createGroupChat = async (req, res) => {
   try {
+    //users is array of users of group
     if (!req.body.users || !req.body.name) {
       throw new Error("Please fill all the fields");
     }
@@ -117,14 +118,39 @@ export const renameGroupChat = async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmin", "-password");
 
-      if(!updatedChat){
-        res.status(404) ;
-        throw new Error("Chat not found!") ;
-      }else{
-        res.status(200).json(updatedChat) ;
-      }
+    if (!updatedChat) {
+      res.status(404);
+      throw new Error("Chat not found!");
+    } else {
+      res.status(200).json(updatedChat);
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+//add a user to gruop
+export const addToGroup = async (req, res) => {
+  try {
+    const { chatId, userId } = req.body;
+
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      { $push: { users: userId } },
+      { new: true }
+    ).populate("users" ,"-password")
+    .populate("groupAdmin" ,"-password") ;
+
+    if(!updatedChat){
+      res.status(404) ;
+      throw new Error("Chat not found!")
+    }else{
+      res.status(200).json(updatedChat) ;
+    }
 
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
+
