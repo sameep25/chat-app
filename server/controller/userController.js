@@ -33,7 +33,6 @@ export const registerUser = async (req, res) => {
 };
 
 // auth user (login)
-
 export const authUser = async (req, res) => {
   try {
     const { email ,password } = req.body ;
@@ -50,3 +49,30 @@ export const authUser = async (req, res) => {
     res.status(400).json({message : error.message}) ;
   }
 };
+
+
+//  /api/user/all ?`name=sameep & lastname=vishwakaram`      ===> query params
+//  mongodb OR operator(performs OR operation in on a array of 2 or more expressrion)
+//  regex Provides regular expression capabilities for pattern matching strings in queries
+//  options are userd with regular expression ( "i" for upper-lower case sensitive )
+//  https://www.mongodb.com/docs/manual/reference/operator/query/regex/
+export const getUsers = async(req ,res) =>{
+  try{
+    const keyword = req.query ? { //searching users by their name or email using query params
+      "$or": [                                    
+        {name : { $regex: req.query.name ,$options:"<i>" } } ,
+        {email : { $regex: req.query.email ,$options:"<i>" } }
+      ]
+    }:{} ;
+
+    // find all users except the user ie. logged-in
+    const users =  await User.find(keyword).find({_id : {$ne : req.user._id} })  ; // $ne -> not equals(mongodb operator)
+    if(users){
+      res.status(200).json({users}) ;
+    }else{
+      throw new Error("No users found") ;
+    }
+  }catch(error){
+    res.status(400).json({message : error.message }) ;
+  }
+}

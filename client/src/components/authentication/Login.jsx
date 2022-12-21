@@ -88,12 +88,15 @@ const Login = () => {
       <FormGroup sx={{ minWidth: "80%", margin: "auto" }}>
         <CustomFormControl required>
           <FormLabel>Email</FormLabel>
-          <Input
-            value={userDetails.email}
-            name="email"
-            placeholder="Enter your email"
-            onChange={(e) => handleChanges(e)}
-          />
+          <Box>
+            <Input
+              fullWidth
+              value={userDetails.email}
+              name="email"
+              placeholder="Enter your email"
+              onChange={(e) => handleChanges(e)}
+            />
+          </Box>
         </CustomFormControl>
 
         <CustomFormControl required>
