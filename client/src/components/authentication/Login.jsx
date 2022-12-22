@@ -75,7 +75,7 @@ const Login = () => {
       setAlertTitle("Registration successfull !");
       setAlertType("success");
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data)); //storing user details in localStorage
       navigate("/chats");
     } catch (error) {
       setAlertTitle(error.response.data.message);
