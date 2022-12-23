@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useContext } from "react";
 import { ChatContext } from "../../context/ChatProvider";
 
-// import ProfileModal from "./ProfileModal";
+import ProfileModal from "./ProfileModal";
 
 import {
   Box,
@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Logout from "@mui/icons-material/Logout";
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const StyledMenu = styled(Menu)`
   & .MuiPaper-root {
@@ -50,9 +50,8 @@ const UserMenu = () => {
     setAccountMenu(null);
   };
 
-  //Profile-Modal
+  //   Profile - Modal;
   const [openModal, setOpenModal] = useState(false);
-  const openProfileModal = () =>{setOpenModal(true)};
 
   return (
     <Box sx={{ marginLeft: "auto" }}>
@@ -86,20 +85,21 @@ const UserMenu = () => {
         open={accountOpen}
         onClose={handleClose}
       >
-        <MenuItem divider onClick={handleClose}>
+        <MenuItem divider onClick={() => setOpenModal(true)}>
           <ListItemIcon>
-            <AccountCircle sx={{color : "white"}}  fontSize="small" />
+            <AccountCircle sx={{ color: "white" }} fontSize="small" />
           </ListItemIcon>
           <ListItemText>Profile</ListItemText>
         </MenuItem>
-        <MenuItem onClick={openProfileModal}>
+        <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            <Logout sx={{color : "white"}} fontSize="small" />
+            <Logout sx={{ color: "white" }} fontSize="small" />
           </ListItemIcon>
           <ListItemText>Logout</ListItemText>
         </MenuItem>
       </StyledMenu>
 
+      <ProfileModal user={user} open={openModal} close={() => setOpenModal(false)} />
     </Box>
   );
 };
