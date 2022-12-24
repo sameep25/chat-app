@@ -65,7 +65,7 @@ export const getUsers = async(req ,res) =>{
         {email : { $regex: req.query.search ,$options:"<i>" } }
       ]
     }:{} ;
-    console.log(keyword.$or);
+    // console.log(keyword.$or);
 
     // find all users except the user ie. logged-in
     const users =  await User.find(keyword).find({_id : {$ne : req.user._id} })  ; // $ne -> not equals(mongodb operator)

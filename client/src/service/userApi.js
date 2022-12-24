@@ -20,6 +20,14 @@ export const loginUserApi = async(userData) =>{
     }
 }
 
+export const searchUserApi = async(config ,serachParams) =>{
+    try{
+        return axios.get(`${URL}/all?search=${serachParams}`,config) ;
+    }catch(error){
+        console.log("Error while calling searchUserApi " ,error);
+    }
+}
+
 export const uploadImageApi = async(data) =>{
     try{
         return await axios.post("https://api.cloudinary.com/v1_1/sameepVishwakarma/image/upload" ,data) ;

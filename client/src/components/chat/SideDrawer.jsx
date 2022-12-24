@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+import { ChatContext } from "../../context/ChatProvider";
+import { searchUserApi } from "../../service/userApi";
+
+import SkeletonStack from "../miscellaneous/SkeletonStack";
+import UserListItem from "../miscellaneous/UserListItem";
 
 import {
   Box,
@@ -8,6 +14,8 @@ import {
   Drawer,
   styled,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 const CustomDrawer = styled(Drawer)`
@@ -36,21 +44,66 @@ const Search = styled("div")(({ theme }) => ({
 const StyledInputBase = styled(InputBase)`
   color: white;
   font-family: work sans;
-  font-size:small ;
+  font-size: small;
 `;
 const StyledButton = styled(Button)`
   background-color: #2e3b49;
-  text-transform:none ;
-  margin:0 1em 0 1px ;
-  min-width:18% ;
-  color:white ;
+  text-transform: none;
+  margin: 0 1em 0 1px;
+  min-width: 18%;
+  color: white;
 `;
 
 const SideDrawer = (props) => {
+  const { user, token } = useContext(ChatContext);
+
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [alertType, setAlertType] = useState("info");
+  const [alertTitle, setAlertTitle] = useState("");
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setLoading(false);
+  };
+
+  const handleSearch = async () => {
+    setLoading(true);
+    if (!search) {
+      setAlertType("warning");
+      setAlertTitle("Please enter a Name or email");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setAlertType("info");
+      setAlertTitle("Searching ...");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await searchUserApi(config, search);
+      // console.log(data.users);
+      if (data.users.length < 1) {
+        setAlertTitle("No such user found");
+        setAlertType("warning");
+      }
+      setSearchResult(data);
+    } catch (error) {
+      setAlertTitle("Failed to load Users");
+      setAlertType("error");
+    }
+  };
+
+  const accessChat = (userId) =>{
+
+  }
 
   return (
     <>
@@ -59,11 +112,29 @@ const SideDrawer = (props) => {
         <Title> Search Users </Title>
         <Box sx={{ display: "flex" }}>
           <Search>
-            <StyledInputBase placeholder="Enter name or email" />
+            <StyledInputBase
+              autoFocus
+              placeholder="Enter name or email"
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
           </Search>
-          <StyledButton  >Go</StyledButton>
+          <StyledButton onClick={handleSearch}>Go</StyledButton>
         </Box>
+
+        {loading ? <SkeletonStack /> : (
+          searchResult?.map((user) =>(
+            <UserListItem key={user._id} user={user} handleFunction={()=>accessChat(user._id)} />
+          ))
+        )}
       </CustomDrawer>
+
+      <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
+        <Alert severity={alertType} sx={{ width: "100%" }}>
+          {alertTitle}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -28,7 +28,6 @@ const defaultUser = {
   email: "",
   password: "",
 };
-
 const guestUser = {
   email: "guest@exapmle.com",
   password: "123456",

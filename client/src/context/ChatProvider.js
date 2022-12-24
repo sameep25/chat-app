@@ -6,23 +6,23 @@ export const ChatContext = createContext();
 const ChatProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo")); // parse since data in stringify format
-    console.log("userinfo : ", userInfo);
+    // console.log("userinfo : ", userInfo);
 
     if (userInfo === null) {
       navigate("/");
       return;
     }
-    console.log("user : ", userInfo.user);
-    const userData = userInfo.user;
-    setUser(userData);
+    setUser(userInfo.user);
+    setToken(userInfo.token);
     navigate("/chats");
   }, []);
 
   return (
-    <ChatContext.Provider value={{ user, setUser }}>
+    <ChatContext.Provider value={{ user, setUser, token }}>
       {children}
     </ChatContext.Provider>
   );
