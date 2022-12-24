@@ -1,6 +1,8 @@
-import React from "react";
+import {useState} from "react";
 import { InputBase, styled, alpha, Tooltip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+
+import SideDrawer from "../chat/SideDrawer";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -17,7 +19,7 @@ const Search = styled("div")(({ theme }) => ({
   },
   [theme.breakpoints.down("sm")]: {
     marginLeft: theme.spacing(1),
-    marginRight:theme.spacing(1),
+    marginRight: theme.spacing(1),
     width: "50%",
   },
 }));
@@ -47,15 +49,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const SearchBar = () => {
+  //side-drawer utils
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setOpenDrawer(open);
+  };
+
   return (
-    <Tooltip title="Search users to chat" arrow>
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase placeholder="Search User" />
-      </Search>
-    </Tooltip>
+    <>
+      <Tooltip title="Search users to chat" arrow>
+        <Search onClick={toggleDrawer(true)}>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase placeholder="Search User" />
+        </Search>
+      </Tooltip>
+
+      <SideDrawer open={openDrawer} close={toggleDrawer(false)} />
+    </>
   );
 };
 
