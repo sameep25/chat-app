@@ -10,7 +10,7 @@ const TitleText = styled(Typography)`
   font-family: work sans;
   display: flex;
   justify-content: center;
-  margin-right: 2em ;
+  margin-right: 2em;
 `;
 
 const Navbar = () => {
@@ -23,7 +23,6 @@ const Navbar = () => {
             Chat-Skoot
           </TitleText>
           <UserMenu />
-
         </Toolbar>
       </AppBar>
     </Box>

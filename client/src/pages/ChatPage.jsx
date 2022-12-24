@@ -13,12 +13,9 @@ const ChatPage = () => {
   const { user } = useContext(ChatContext);
   const navigate = useNavigate();
 
-  // console.log("chatpage : " ,user);
-
   useEffect(() => {
     if (user === null) {
       navigate("/");
-      console.log("asdasda");
     }
   }, [navigate, user]);
 
