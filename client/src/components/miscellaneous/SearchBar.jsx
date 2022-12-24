@@ -2,7 +2,7 @@ import { useState } from "react";
 import { InputBase, styled, alpha, Tooltip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-import SideDrawer from "../chat/SideDrawer";
+import SideDrawer from "../sideDrawer/SideDrawer";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext ,useEffect } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { searchUserApi } from "../../service/userApi";
@@ -61,6 +61,15 @@ const SideDrawer = (props) => {
   const [searchResult, setSearchResult] = useState([]);
   const [loadingChat, setLoadingChat] = useState(false);
 
+  // useEffect(() => {
+  //   setSearchResult([]) ;
+  //   return () => {
+  //     setSearchResult([]) ;
+  //   }
+  // }, [setSearch]); 
+  
+
+  //Alert utils
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
   const [alertTitle, setAlertTitle] = useState("");
@@ -71,6 +80,7 @@ const SideDrawer = (props) => {
     setLoading(false);
   };
 
+  //search users to chat
   const handleSearch = async () => {
     setLoading(true);
     if (!search) {
@@ -89,12 +99,12 @@ const SideDrawer = (props) => {
         },
       };
       const { data } = await searchUserApi(config, search);
-      // console.log(data.users);
+      // console.log(data);
       if (data.users.length < 1) {
         setAlertTitle("No such user found");
         setAlertType("warning");
       }
-      setSearchResult(data);
+      setSearchResult(data.users);
     } catch (error) {
       setAlertTitle("Failed to load Users");
       setAlertType("error");
