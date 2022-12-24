@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useContext } from "react";
 import { ChatContext } from "../../context/ChatProvider";
+import { useNavigate } from "react-router-dom";
 
 import ProfileModal from "./ProfileModal";
 
@@ -31,23 +32,35 @@ const StyledMenu = styled(Menu)`
   }
 `;
 const UserMenu = () => {
-  const { user } = useContext(ChatContext);
-  //   console.log(user);
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(ChatContext);
+  // console.log("Menu USer : " ,user);
+
+  // handing notefication menu
   const [notificationMenu, setNotificationMenu] = useState(null);
   const notificationOpen = Boolean(notificationMenu);
   const handleNotificationMenu = (event) => {
     setNotificationMenu(event.currentTarget);
   };
 
+  // handling account menu
   const [accountMenu, setAccountMenu] = useState(null);
   const accountOpen = Boolean(accountMenu);
   const handleAccountMenu = (event) => {
     setAccountMenu(event.currentTarget);
   };
 
+  // close menu-list
   const handleClose = () => {
     setNotificationMenu(null);
     setAccountMenu(null);
+  };
+
+  // logout user
+  const logoutUser = () => {
+    localStorage.removeItem("userInfo");
+    setUser(null);
+    navigate("/");
   };
 
   //   Profile - Modal;
@@ -91,7 +104,8 @@ const UserMenu = () => {
           </ListItemIcon>
           <ListItemText>Profile</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+
+        <MenuItem onClick={logoutUser}>
           <ListItemIcon>
             <Logout sx={{ color: "white" }} fontSize="small" />
           </ListItemIcon>
@@ -99,7 +113,11 @@ const UserMenu = () => {
         </MenuItem>
       </StyledMenu>
 
-      <ProfileModal user={user} open={openModal} close={() => setOpenModal(false)} />
+      <ProfileModal
+        user={user}
+        open={openModal}
+        close={() => setOpenModal(false)}
+      />
     </Box>
   );
 };

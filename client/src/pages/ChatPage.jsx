@@ -1,24 +1,48 @@
-// import { useContext } from "react";
-// import { ChatContext } from "../context/ChatProvider";
+import { useContext, useEffect } from "react";
+import { ChatContext } from "../context/ChatProvider";
+import { useNavigate } from "react-router-dom";
 
 // import SideDrawer from "../components/chat/SideDrawer";
 import MyChats from "../components/chat/MyChats";
 import ChatBox from "../components/chat/ChatBox";
-import Navbar from "../components/chat/Navbar"
+import Navbar from "../components/chat/Navbar";
 
-import { Grid ,Box  } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 
 const ChatPage = () => {
-  // const { user } = useContext(ChatContext);
+  const { user } = useContext(ChatContext);
+  const navigate = useNavigate();
+
+  // console.log("chatpage : " ,user);
+
+  useEffect(() => {
+    if (user === null) {
+      navigate("/");
+      console.log("asdasda");
+    }
+  }, [navigate, user]);
+
   return (
     <>
-    <Box sx={{width:"100%"}}>
-      <Navbar />
-      <Grid container spacing={2}>
-        <Grid item lg={4} sm={4} xs={12}> <MyChats /> </Grid>
-        <Grid item lg={8} sm={8} xs={12}> <ChatBox /> </Grid>
-      </Grid>
-      </Box>
+      {user ? (
+        <>
+          <Box sx={{ width: "100%" }}>
+            <Navbar />
+            <Grid container spacing={2}>
+              <Grid item lg={4} sm={4} xs={12}>
+                {" "}
+                <MyChats />{" "}
+              </Grid>
+              <Grid item lg={8} sm={8} xs={12}>
+                {" "}
+                <ChatBox />{" "}
+              </Grid>
+            </Grid>
+          </Box>
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

@@ -16,14 +16,15 @@ export const registerUser = async (req, res) => {
 
     // const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password ,10) ; // 2nd arg is by-default is salt
-    const user = { name: name ,email: email ,password: hashedPassword, picture:picture }
+    let user = { name: name ,email: email ,password: hashedPassword, picture:picture }
 
     const newUser = new User(user); //varifying schema of user
     if (newUser) {
-      await newUser.save();
+      user = newUser ;
+      await user.save();
       return res
         .status(200)
-        .json({ newUser, token: generateToken(newUser._id) });
+        .json({ user , token: generateToken(user._id) });
     } else {
       throw new Error("User schema diden't match");
     }

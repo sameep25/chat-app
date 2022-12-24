@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Box, Button, Typography, Modal, styled } from "@mui/material";
+import { Box, Typography, Modal, styled } from "@mui/material";
 
 const style = {
   display: "flex",
@@ -26,6 +25,7 @@ const CustomImage = styled("img")({
 });
 
 const ProfileModal = (props) => {
+  // console.log("Modal USer : ", props.user);
   return (
     <div>
       <Modal

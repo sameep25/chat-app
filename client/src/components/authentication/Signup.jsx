@@ -1,8 +1,10 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { ChatContext } from "../../context/ChatProvider.js";
 import { signupUserApi, uploadImageApi } from "../../service/userApi.js";
+
 import { LoadingButton } from "@mui/lab";
 import {
   FormControl,
@@ -35,6 +37,7 @@ const defaultUser = {
 };
 
 const Signup = () => {
+  const { setUser } = useContext(ChatContext);
   const navigate = useNavigate();
   // handling user inputs
   const [userDetails, setUserDetails] = useState(defaultUser);
@@ -60,7 +63,7 @@ const Signup = () => {
     setLoading(false);
   };
 
-  // uploadind picture to cloudinary
+  // uploading picture to cloudinary
   const picHandle = async (e) => {
     setLoading(true);
     const pic = e.target.files[0];
@@ -117,6 +120,7 @@ const Signup = () => {
       setAlertType("success");
 
       localStorage.setItem("userInfo", JSON.stringify(data));
+      setUser(data.user);
       navigate("/chats");
     } catch (error) {
       setAlertTitle(error.response.data.message);

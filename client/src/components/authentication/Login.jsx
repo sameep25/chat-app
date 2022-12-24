@@ -1,7 +1,9 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { loginUserApi } from "../../service/userApi";
 import { useNavigate } from "react-router-dom";
+
+import { ChatContext } from "../../context/ChatProvider";
 
 import { LoadingButton } from "@mui/lab";
 import {
@@ -34,6 +36,7 @@ const guestUser = {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser } = useContext(ChatContext);
 
   const [userDetails, setUserDetails] = useState(defaultUser);
   const handleChanges = (e) => {
@@ -60,7 +63,8 @@ const Login = () => {
     }
     setLoading(false);
   };
-  // hitting loginUserapi
+
+  // hitting loginUserapi and storing data in context and local-storage
   const loginUser = async () => {
     setLoading(true);
     if (userDetails.email === "" || userDetails.password === "") {
@@ -71,11 +75,12 @@ const Login = () => {
 
     try {
       const { data } = await loginUserApi(userDetails);
-      // console.log(data);
+      // console.log("Login data : " ,data);
       setAlertTitle("Registration successfull !");
       setAlertType("success");
 
       localStorage.setItem("userInfo", JSON.stringify(data)); //storing user details in localStorage
+      setUser(data.user);
       navigate("/chats");
     } catch (error) {
       setAlertTitle(error.response.data.message);

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState ,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Grid, Typography, styled, Button } from "@mui/material";
@@ -41,7 +41,6 @@ const Container = styled(Box)`
 `;
 
 const Home = () => {
-  
   const navigate = useNavigate();
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo")); // parse since data in stringify format
@@ -49,7 +48,7 @@ const Home = () => {
     if (userInfo) {
       navigate("/chats");
     }
-  }, [navigate]);
+  }, []);
 
   const [loginTab, setLoginTab] = useState(true);
   const handleLoginTab = (e) => {
