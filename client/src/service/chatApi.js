@@ -9,3 +9,12 @@ export const accessChatApi = async (userId, config) => {
     console.log("Error while calling accessChatApi : ", error);
   }
 };
+
+
+export const fetchChatsApi = async(config) =>{
+  try{
+    return axios.get(`${URL}/all`, config) ;
+  }catch(error){
+    console.log("Error while calling fetchChatsApi " ,error);
+  }
+}

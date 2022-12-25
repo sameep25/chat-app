@@ -51,6 +51,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const SearchBar = () => {
   //side-drawer utils
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [search, setSearch] = useState("");
+  // console.log(search);
 
   return (
     <>
@@ -59,11 +61,18 @@ const SearchBar = () => {
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase placeholder="Search User" />
+          <StyledInputBase
+            placeholder="Search User"
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </Search>
       </Tooltip>
 
-      <SideDrawer open={openDrawer} close={() => setOpenDrawer(false)} />
+      <SideDrawer
+        open={openDrawer}
+        close={() => setOpenDrawer(false)}
+        // search={search}
+      />
     </>
   );
 };

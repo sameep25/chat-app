@@ -5,7 +5,7 @@ import { searchUserApi } from "../../service/userApi";
 import { accessChatApi } from "../../service/chatApi";
 
 import SkeletonStack from "../miscellaneous/SkeletonStack";
-import UserListItem from "../miscellaneous/UserListItem";
+import UserListItem from "../sideDrawer/UserListItem";
 
 import {
   Box,
@@ -111,7 +111,6 @@ const SideDrawer = (props) => {
       setAlertType("error");
     }
   };
-
   //access or create chatapi
   const accessChat = async (userId) => {
     setLoading(true);
@@ -125,13 +124,16 @@ const SideDrawer = (props) => {
         },
       };
       const { data } = await accessChatApi(userId, config);
-      // console.log(data);
+
+      // if (!chats.find((chat) => chat._id === data._id))
+      //   setChats([data, ...chats]);
+
       setSelectedChat(data);
       setLoadingChat(false);
+      setSearch("") ;
       props.close();
       return;
     } catch (error) {
-      // console.log(error);
       setLoading(true);
       setAlertTitle("Failed to access chat");
       setAlertType("error");
@@ -140,7 +142,6 @@ const SideDrawer = (props) => {
 
   return (
     <>
-      {/* <Button onClick={toggleDrawer(true)}>as</Button> */}
       <CustomDrawer anchor={"left"} open={props.open} onClose={props.close}>
         <Title> Search Users </Title>
         <Box sx={{ display: "flex" }}>

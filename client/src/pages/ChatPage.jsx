@@ -26,11 +26,11 @@ const ChatPage = () => {
           <Box sx={{ width: "100%" }}>
             <Navbar />
             <Grid container spacing={2}>
-              <Grid item lg={4} sm={4} xs={12}>
+              <Grid sx={{height:"90vh"}} item lg={4} sm={6} xs={12}>
                 {" "}
                 <MyChats />{" "}
               </Grid>
-              <Grid item lg={8} sm={8} xs={12}>
+              <Grid item lg={8} sm={6} xs={12}>
                 {" "}
                 <ChatBox />{" "}
               </Grid>

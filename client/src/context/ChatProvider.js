@@ -8,7 +8,7 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
   const [selectedChat, setSelectedChat] = useState();
-  const [chats, setChats] = useState() ;
+  const [chats, setChats] = useState([]) ;
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo")); // parse since data in stringify format
