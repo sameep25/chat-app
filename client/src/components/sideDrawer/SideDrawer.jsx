@@ -63,13 +63,6 @@ const SideDrawer = (props) => {
   const [searchResult, setSearchResult] = useState([]);
   const [loadingChat, setLoadingChat] = useState(false);
 
-  // useEffect(() => {
-  //   setSearchResult([]) ;
-  //   return () => {
-  //     setSearchResult([]) ;
-  //   }
-  // }, [setSearch]);
-
   //Alert utils
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
@@ -111,6 +104,7 @@ const SideDrawer = (props) => {
       setAlertType("error");
     }
   };
+
   //access or create chatapi
   const accessChat = async (userId) => {
     setLoading(true);
@@ -125,8 +119,8 @@ const SideDrawer = (props) => {
       };
       const { data } = await accessChatApi(userId, config);
 
-      // if (!chats.find((chat) => chat._id === data._id))
-      //   setChats([data, ...chats]);
+      if (!chats.find((chat) => chat._id === data._id))
+        setChats([data, ...chats]);
 
       setSelectedChat(data);
       setLoadingChat(false);
