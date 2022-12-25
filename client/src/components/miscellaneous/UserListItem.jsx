@@ -21,7 +21,7 @@ const TextContainer = styled(Box)`
 
 const UserListItem = ({user ,handleFunction}) => {
   return (
-    <Container >
+    <Container onClick={handleFunction} >
       <Avatar src={user.picture} sx={{ width: 32, height: 32 }}></Avatar>
       <TextContainer>
         <Typography sx={{fontSize : "small"}} >{user.name}</Typography>

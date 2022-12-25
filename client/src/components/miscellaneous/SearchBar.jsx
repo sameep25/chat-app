@@ -51,20 +51,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const SearchBar = () => {
   //side-drawer utils
   const [openDrawer, setOpenDrawer] = useState(false);
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setOpenDrawer(open);
-  };
 
   return (
     <>
       <Tooltip title="Search users to chat" arrow>
-        <Search onClick={toggleDrawer(true)}>
+        <Search onClick={() => setOpenDrawer(true)}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
@@ -72,7 +63,7 @@ const SearchBar = () => {
         </Search>
       </Tooltip>
 
-      <SideDrawer open={openDrawer} close={toggleDrawer(false)} />
+      <SideDrawer open={openDrawer} close={() => setOpenDrawer(false)} />
     </>
   );
 };

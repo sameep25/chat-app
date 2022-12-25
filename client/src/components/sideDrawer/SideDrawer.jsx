@@ -1,7 +1,8 @@
-import { useState, useContext ,useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { searchUserApi } from "../../service/userApi";
+import { accessChatApi } from "../../service/chatApi";
 
 import SkeletonStack from "../miscellaneous/SkeletonStack";
 import UserListItem from "../miscellaneous/UserListItem";
@@ -55,7 +56,8 @@ const StyledButton = styled(Button)`
 `;
 
 const SideDrawer = (props) => {
-  const { user, token } = useContext(ChatContext);
+  const { user, token, setSelectedChat, chats, setChats } =
+    useContext(ChatContext);
 
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -66,8 +68,7 @@ const SideDrawer = (props) => {
   //   return () => {
   //     setSearchResult([]) ;
   //   }
-  // }, [setSearch]); 
-  
+  // }, [setSearch]);
 
   //Alert utils
   const [loading, setLoading] = useState(false);
@@ -111,9 +112,31 @@ const SideDrawer = (props) => {
     }
   };
 
-  const accessChat = (userId) =>{
-
-  }
+  //access or create chatapi
+  const accessChat = async (userId) => {
+    setLoading(true);
+    setAlertTitle("accessing chat please wait");
+    setAlertType("info");
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await accessChatApi(userId, config);
+      // console.log(data);
+      setSelectedChat(data);
+      setLoadingChat(false);
+      props.close();
+      return;
+    } catch (error) {
+      // console.log(error);
+      setLoading(true);
+      setAlertTitle("Failed to access chat");
+      setAlertType("error");
+    }
+  };
 
   return (
     <>
@@ -133,9 +156,15 @@ const SideDrawer = (props) => {
           <StyledButton onClick={handleSearch}>Go</StyledButton>
         </Box>
 
-        {loading ? <SkeletonStack /> : (
-          searchResult?.map((user) =>(
-            <UserListItem key={user._id} user={user} handleFunction={()=>accessChat(user._id)} />
+        {loading ? (
+          <SkeletonStack />
+        ) : (
+          searchResult?.map((user) => (
+            <UserListItem
+              key={user._id}
+              user={user}
+              handleFunction={() => accessChat(user._id)}
+            />
           ))
         )}
       </CustomDrawer>
