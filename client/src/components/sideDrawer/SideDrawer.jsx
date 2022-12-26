@@ -100,6 +100,7 @@ const SideDrawer = (props) => {
       }
       setSearchResult(data.users);
     } catch (error) {
+      setLoading(true);
       setAlertTitle("Failed to load Users");
       setAlertType("error");
     }
@@ -124,7 +125,7 @@ const SideDrawer = (props) => {
 
       setSelectedChat(data);
       setLoadingChat(false);
-      setSearch("") ;
+      setSearch("");
       props.close();
       return;
     } catch (error) {

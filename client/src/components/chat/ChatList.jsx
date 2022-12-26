@@ -7,7 +7,7 @@ import {
   getSenderPicture,
 } from "../../config/ChatLogics";
 
-import { Box, Avatar, Typography, styled } from "@mui/material";
+import { Box, Avatar, Typography, styled ,  Badge} from "@mui/material";
 
 const Container = styled(Box)`
   display: flex;
@@ -44,10 +44,10 @@ const ChatList = ({ chat }) => {
         sx={{ width: 32, height: 32 }}
       ></Avatar>
       <TextContainer>
-        <Typography sx={{ fontSize: "small" }}>
+        <Typography sx={{ fontSize: "100%" }}>
           {!chat.isGroupChat ? getSenderName(user, chat.users) : chat.chatName}{" "}
         </Typography>
-        <Typography sx={{ fontSize: "xx-small" }}>
+        <Typography sx={{ fontSize: "60%" }}>
           {!chat.isGroupChat
             ? getSenderEmail(user, chat.users)
             : `Admin : ${chat.groupAdmin.email}`}

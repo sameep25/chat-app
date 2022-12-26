@@ -5,10 +5,10 @@ export const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState("");
-  const [selectedChat, setSelectedChat] = useState();
-  const [chats, setChats] = useState([]) ;
+  const [user, setUser] = useState(null);   // logged in user data
+  const [token, setToken] = useState("");   // logged in user - jwt token
+  const [chats, setChats] = useState([]) ;  // logged in user chats
+  const [selectedChat, setSelectedChat] = useState(); //
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo")); // parse since data in stringify format

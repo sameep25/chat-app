@@ -2,14 +2,13 @@ import { useContext, useEffect, useState } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { fetchChatsApi } from "../../service/chatApi";
+
 import ChatList from "./ChatList";
+import GroupChatModal from "./GroupChatModal";
 
 import {
   Box,
-  InputBase,
-  alpha,
   Button,
-  Drawer,
   styled,
   Typography,
   Snackbar,
@@ -54,6 +53,9 @@ const MyChats = () => {
     setLoading(false);
   };
 
+  // gruop chat modal
+  const [openModal, setOpenModal] = useState(false);
+
   // hitting fectChatApi
   const fetchChats = async () => {
     try {
@@ -84,7 +86,7 @@ const MyChats = () => {
           >
             My Chats
           </Typography>
-          <StyledButton size="small">
+          <StyledButton onClick={()=>setOpenModal(true)}  size="small">
             New Group Chat
             <AddIcon fontSize="small" />
           </StyledButton>
@@ -102,6 +104,9 @@ const MyChats = () => {
           {alertTitle}
         </Alert>
       </Snackbar>
+
+      <GroupChatModal open={openModal} close={() =>setOpenModal(false)} />
+
     </>
   );
 };
