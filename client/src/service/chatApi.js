@@ -10,11 +10,19 @@ export const accessChatApi = async (userId, config) => {
   }
 };
 
-
-export const fetchChatsApi = async(config) =>{
-  try{
-    return axios.get(`${URL}/all`, config) ;
-  }catch(error){
-    console.log("Error while calling fetchChatsApi " ,error);
+export const fetchChatsApi = async (config) => {
+  try {
+    return axios.get(`${URL}/all`, config);
+  } catch (error) {
+    console.log("Error while calling fetchChatsApi ", error);
   }
-}
+};
+
+export const createNewGroupApi = async (config, groupData) => {
+  try {
+    // console.log(groupData);
+    return await axios.post(`${URL}/group/new`,  groupData , config);
+  } catch (error) {
+    console.log("Erroe while calling creteNewGroupApi ", error);
+  }
+};

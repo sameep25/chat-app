@@ -1,8 +1,9 @@
 import React from "react";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { searchUserApi } from "../../service/userApi";
+import { createNewGroupApi } from "../../service/chatApi";
 
 import UserListItem from "../sideDrawer/UserListItem";
 import UserBadgeItem from "./UserBadgeItem";
@@ -80,11 +81,20 @@ const UserListBox = styled(Box)`
 
 const GroupChatModal = (props) => {
   const { user, chats, setChats, token } = useContext(ChatContext);
-  const [groupChat, setGroupChat] = useState(defaultGroupChat);
 
   const [search, setSearch] = useState("");
   const [searchResult, setSearchReasult] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [groupChatname, setGroupChatname] = useState("");
+  //removing users from lists upon closing the modal
+  useEffect(() => {
+    if (props.open === false) {
+      setSearchReasult([]);
+      setSelectedUsers([]);
+      setGroupChatname("");
+    }
+  }, [props.open]);
+  // console.log(searchResult, selectedUsers);
 
   //   Alert
   const [loading, setLoading] = useState(false);
@@ -97,7 +107,7 @@ const GroupChatModal = (props) => {
     setLoading(false);
   };
 
-  //
+  //seraching user from db to add to group
   const handleSerach = async (query) => {
     setSearch(query);
     if (!query) return;
@@ -114,7 +124,7 @@ const GroupChatModal = (props) => {
         setAlertType("warning");
       }
       setSearchReasult(data.users);
-      console.log(searchResult);
+      // console.log(searchResult);
     } catch (error) {
       setLoading(true);
       setAlertTitle("Failed to load Users");
@@ -122,10 +132,7 @@ const GroupChatModal = (props) => {
     }
   };
 
-  //
-  const handleSumbit = () => {};
-
-  //
+  // adding users to selectedUser array
   const addToGroup = (user) => {
     if (selectedUsers.includes(user)) {
       setLoading(true);
@@ -136,9 +143,43 @@ const GroupChatModal = (props) => {
     setSelectedUsers([...selectedUsers, user]);
   };
 
+  //removing users from selectedUser array
+  const handleDelete = (delUser) => {
+    setSelectedUsers(selectedUsers.filter((user) => user._id != delUser._id));
+  };
+
   //
-  const handleDelete = (user) => {
-    // setSelectedUsers(selectedUsers.filter())
+  const handleSumbit = async () => {
+    setLoading(true);
+    setAlertTitle("Creating group chat");
+    if (!groupChatname || !selectedUsers) {
+      setAlertTitle("Please fill all the fields");
+      setAlertType("warning");
+      return;
+    }
+
+    if (selectedUsers.length < 2) {
+      setAlertTitle("Add atleast 2 users");
+      setAlertType("warning");
+      return ;
+    }
+
+    try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+
+      const { data } = await createNewGroupApi(config, {
+        name: groupChatname,
+        users: JSON.stringify(selectedUsers?.map((user) => user._id)),
+      });
+      setChats([data , ...chats]) ;
+      props.close() ;
+      setAlertTitle("New group-chat created");
+      setAlertType("success");
+      return ;
+    } catch (error) {
+      setAlertTitle("Failed to create a group-chat");
+      setAlertType("error");
+    }
   };
 
   return (
@@ -161,7 +202,7 @@ const GroupChatModal = (props) => {
             <StyledInputBase
               placeholder="Chat name"
               onChange={(e) => {
-                setSearch(e.target.value);
+                setGroupChatname(e.target.value);
               }}
             />
 
@@ -171,7 +212,8 @@ const GroupChatModal = (props) => {
             />
           </Box>
 
-          <Box sx={{width:"100%", display:"flex" ,flexWrap:"wrap"}} >
+          {/* selected user list */}
+          <Box sx={{ width: "100%", display: "flex", flexWrap: "wrap" }}>
             {selectedUsers?.map((user) => (
               <UserBadgeItem
                 key={user._id}
@@ -181,26 +223,19 @@ const GroupChatModal = (props) => {
             ))}
           </Box>
 
-          {loading ? (
-            <Typography sx={{ fontFamily: "work sans" }}>
-              Loading ...
-            </Typography>
-          ) : (
-            <>
-              <UserListBox>
-                {searchResult &&
-                  searchResult
-                    ?.slice(0, 4)
-                    .map((user) => (
-                      <UserListItem
-                        key={user._id}
-                        user={user}
-                        handleFunction={() => addToGroup(user)}
-                      />
-                    ))}
-              </UserListBox>
-            </>
-          )}
+          {/* search user list */}
+          <UserListBox>
+            {searchResult &&
+              searchResult
+                ?.slice(0, 4)
+                .map((user) => (
+                  <UserListItem
+                    key={user._id}
+                    user={user}
+                    handleFunction={() => addToGroup(user)}
+                  />
+                ))}
+          </UserListBox>
 
           <StyledButton onClick={handleSumbit}>Create Chat</StyledButton>
         </Box>

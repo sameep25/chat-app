@@ -13,6 +13,7 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1]; //split Bearer part of token
       // decodes the token
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      // console.log(decodedToken);
       req.user = await User.findById(decodedToken.id).select("-password"); //return user without password
       next();
       return;

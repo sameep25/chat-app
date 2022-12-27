@@ -21,8 +21,10 @@ const Container = styled(Box)`
   margin: 0.5em;
   color: white;
   height: 100%;
+  overflow-y: scroll;
 `;
 const Header = styled(Box)`
+  position: absolute;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #2e3b49;
@@ -86,17 +88,16 @@ const MyChats = () => {
           >
             My Chats
           </Typography>
-          <StyledButton onClick={()=>setOpenModal(true)}  size="small">
+          <StyledButton onClick={() => setOpenModal(true)} size="small">
             New Group Chat
             <AddIcon fontSize="small" />
           </StyledButton>
         </Header>
 
-        {
-        chats?.map((chat) => (
-          <ChatList key={chat._id} chat={chat} />
-        ))
-        }
+        <Box sx={{ marginTop: "2em" }}>
+          {chats &&
+            chats?.map((chat) => <ChatList key={chat._id} chat={chat} />)}
+        </Box>
       </Container>
 
       <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
@@ -105,8 +106,7 @@ const MyChats = () => {
         </Alert>
       </Snackbar>
 
-      <GroupChatModal open={openModal} close={() =>setOpenModal(false)} />
-
+      <GroupChatModal open={openModal} close={() => setOpenModal(false)} />
     </>
   );
 };
