@@ -24,7 +24,7 @@ const Container = styled(Box)`
   overflow-y: scroll;
 `;
 const Header = styled(Box)`
-  position: absolute;
+  // position: absolute;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #2e3b49;
@@ -94,7 +94,7 @@ const MyChats = () => {
           </StyledButton>
         </Header>
 
-        <Box sx={{ marginTop: "2em" }}>
+        <Box sx={{ marginLeft: "0.5em" }}>
           {chats &&
             chats?.map((chat) => <ChatList key={chat._id} chat={chat} />)}
         </Box>

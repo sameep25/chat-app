@@ -21,7 +21,7 @@ const Container = styled(Box)`
   }
 `;
 const TextContainer = styled(Box)`
-  margin-left: 0.5em;
+  margin-left: 1em;
   & > p {
     font-family: work sans;
   }
