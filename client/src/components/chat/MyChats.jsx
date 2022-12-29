@@ -70,7 +70,7 @@ const MyChats = ({fetchAgain}) => {
       const { data } = await fetchChatsApi(config);
       setChats(data);
     } catch (error) {
-      setAlertTitle(error.message);
+      setAlertTitle("Failed to get chats");
       setAlertType("error");
     }
   };

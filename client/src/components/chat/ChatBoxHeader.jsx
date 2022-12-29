@@ -11,7 +11,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 
-
 const Header = styled(Box)`
   display: flex;
   align-items: center;
@@ -22,7 +21,7 @@ const Header = styled(Box)`
   color: white;
 `;
 
-const ChatBoxHeader = () => {
+const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedChat, setSelectedChat } = useContext(ChatContext);
   // gruop chat modal
   const [openModal, setOpenModal] = useState(false);
@@ -74,13 +73,15 @@ const ChatBoxHeader = () => {
                 </Box>
 
                 <EditGroupChatModal
+                  fetchAgain={fetchAgain}
+                  setFetchAgain={setFetchAgain}
                   open={openModal}
                   close={() => setOpenModal(false)}
                 />
               </>
             ) : (
               <>
-                <Box sx={{ marginLeft: "auto" ,marginRight: "1em" }}>
+                <Box sx={{ marginLeft: "auto", marginRight: "1em" }}>
                   <Tooltip title="Info" arrow>
                     <IconButton
                       size="medium"

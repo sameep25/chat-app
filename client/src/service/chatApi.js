@@ -26,3 +26,12 @@ export const createNewGroupApi = async (config, groupData) => {
     console.log("Erroe while calling creteNewGroupApi ", error);
   }
 };
+
+
+export const renameGroupApi = async(config ,newChatName) => {
+  try{
+    return await axios.put(`${URL}/group/rename` ,newChatName , config) ;
+  }catch(error){
+    console.log("Error while calling renameGroupApi " ,error);
+  }
+}

@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from "react";
 
 import { ChatContext } from "../../../context/ChatProvider";
 import { searchUserApi } from "../../../service/userApi";
-import { createNewGroupApi } from "../../../service/chatApi";
+import { createNewGroupApi, renameGroupApi } from "../../../service/chatApi";
 
 import UserListItem from "../../sideDrawer/UserListItem";
 import UserBadgeItem from "../UserBadgeItem";
@@ -24,12 +24,17 @@ import {
 } from "@mui/material";
 
 const StyledButton = styled(Button)`
-  background-color: #2e3b49;
   text-transform: none;
-  margin: 0 1em 0 1px;
+  margin: 0 1em 0 1em;
   min-width: 18%;
-  color: white;
   font-family: work sans;
+  font-weight: 600;
+
+  // background-color: #2e3b49;
+  // color: white;
+  // :hover {
+  //   background:#2e3b49 ;
+  // }
 `;
 
 const CustomModal = styled(Modal)`
@@ -75,7 +80,13 @@ const UserListBox = styled(Box)`
 `;
 
 const EditGroupChatModal = (props) => {
-  const { user, chats, setChats, token } = useContext(ChatContext);
+  const { user, chats, setChats, token, selectedChat, setSelectedChat } =
+    useContext(ChatContext);
+
+  useEffect(() => {
+    setSelectedUsers([...selectedChat.users]);
+    // setGroupChatname(selectedChat.chatName);
+  }, []);
 
   const [search, setSearch] = useState("");
   const [searchResult, setSearchReasult] = useState([]);
@@ -85,11 +96,15 @@ const EditGroupChatModal = (props) => {
   useEffect(() => {
     if (props.open === false) {
       setSearchReasult([]);
-      setSelectedUsers([]);
-      setGroupChatname("");
+      setSelectedUsers([...selectedChat.users]);
+      // setGroupChatname(selectedChat.chatName);
     }
   }, [props.open]);
-  // console.log(searchResult, selectedUsers);
+
+  // console.log("searchResult", searchResult);
+  // console.log("selectedUsers : ", selectedUsers);
+  // console.log("groupChatname : ", groupChatname);
+  // console.log("selectedChat._id : ", selectedChat._id);
 
   //   Alert
   const [loading, setLoading] = useState(false);
@@ -126,8 +141,7 @@ const EditGroupChatModal = (props) => {
       setAlertType("error");
     }
   };
-
-  // adding users to selected User array
+  // adding users to selectedUser array
   const addToGroup = (user) => {
     if (selectedUsers.includes(user)) {
       setLoading(true);
@@ -139,11 +153,44 @@ const EditGroupChatModal = (props) => {
   };
 
   //removing users from group
-  const handleDelete = (delUser) => {
-    setSelectedUsers(selectedUsers.filter((user) => user._id != delUser._id));
+  const handleRemove = () => {};
+
+  //rename group
+  const handleRename = async () => {
+    if (!groupChatname) {
+      setLoading(true);
+      setAlertTitle("Enter something");
+      setAlertType("info");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await renameGroupApi(config, {
+        chatId: selectedChat._id,
+        chatName: groupChatname,
+      });
+      // console.log(data);
+      setSelectedChat(data);
+      props.setFetchAgain(!props.fecthAgain);
+
+      setAlertTitle("Group renamed");
+      setAlertType("success");
+      props.close();
+    } catch (error) {
+      setAlertTitle("Error while renaming group : Try Again");
+      setAlertType("error");
+    }
   };
 
-  //
+  // edit group chat
   const handleSumbit = async () => {
     setLoading(true);
     setAlertTitle("Creating group chat");
@@ -186,36 +233,53 @@ const EditGroupChatModal = (props) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          {/* Heading */}
           <Typography
             variant="h6"
-            sx={{ fontFamily: "work sans", fontWeight: "500" }}
+            sx={{
+              fontFamily: "work sans",
+              fontWeight: "500",
+              marginBottom: "5px",
+            }}
           >
-            Create Group Chat
+            Edit Group Chat
           </Typography>
 
-          <Box sx={{ width: "100%" }}>
-            <StyledInputBase
-              placeholder="Chat name"
-              onChange={(e) => {
-                setGroupChatname(e.target.value);
-              }}
-            />
-
-            <StyledInputBase
-              placeholder="Search Users"
-              onChange={(e) => handleSerach(e.target.value)}
-            />
-          </Box>
-
-          {/* selected user list */}
+          {/* group users list */}
           <Box sx={{ width: "100%", display: "flex", flexWrap: "wrap" }}>
-            {selectedUsers?.map((user) => (
+            {selectedChat.users?.map((user) => (
               <UserBadgeItem
                 key={user._id}
                 user={user}
-                handleFunction={() => handleDelete(user)}
+                handleFunction={handleRemove}
               />
             ))}
+          </Box>
+
+          {/* chat name edit and search users  */}
+          <Box sx={{ width: "100%", marginTop: "1em" }}>
+            <Box display={"flex"}>
+              <StyledInputBase
+                placeholder="Change Chat name"
+                onChange={(e) => {
+                  setGroupChatname(e.target.value);
+                }}
+              />
+              <StyledButton
+                sx={{ ":hover": { background: "none" } }}
+                size="small"
+                variant="text"
+                color="info"
+                onClick={handleRename}
+              >
+                Update
+              </StyledButton>
+            </Box>
+
+            <StyledInputBase
+              placeholder="Add User to Group"
+              onChange={(e) => handleSerach(e.target.value)}
+            />
           </Box>
 
           {/* search user list */}
@@ -232,7 +296,15 @@ const EditGroupChatModal = (props) => {
                 ))}
           </UserListBox>
 
-          <StyledButton onClick={handleSumbit}>Create Chat</StyledButton>
+          {/* submit handlers */}
+          <StyledButton
+            size="small"
+            variant="outlined"
+            color="error"
+            onClick={() => {}}
+          >
+            Delete Group
+          </StyledButton>
         </Box>
       </CustomModal>
 

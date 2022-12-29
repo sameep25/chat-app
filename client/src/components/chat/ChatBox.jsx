@@ -24,7 +24,7 @@ const ChatBox = ({ fetchAgain, setFetchAgain }) => {
 
   return (
     <Container>
-      <ChatBoxHeader />
+      <ChatBoxHeader fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>
       <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
     </Container>
   );
