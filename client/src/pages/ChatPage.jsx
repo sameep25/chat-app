@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect ,useState } from "react";
 import { ChatContext } from "../context/ChatProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +13,8 @@ const ChatPage = () => {
   const { user } = useContext(ChatContext);
   const navigate = useNavigate();
 
+  const [fetchAgain, setFetchAgain] = useState(false) ;
+
   useEffect(() => {
     if (user === null) {
       navigate("/");
@@ -23,16 +25,16 @@ const ChatPage = () => {
     <>
       {user ? (
         <>
-          <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%" ,height:"100%" }}>
             <Navbar />
-            <Grid container spacing={2}>
-              <Grid sx={{height:"90vh"}} item lg={4} sm={6} xs={12}>
+            <Grid container >
+              <Grid sx={{height:"87vh"}} item lg={3} md={4} sm={5.5} xs={12}>
                 {" "}
-                <MyChats />{" "}
+                <MyChats fetchAgain={fetchAgain} />{" "}
               </Grid>
-              <Grid item lg={8} sm={6} xs={12}>
+              <Grid sx={{height:"87vh"}} item lg={9} md={8} sm={6.5} xs={12}>
                 {" "}
-                <ChatBox />{" "}
+                <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>{" "}
               </Grid>
             </Grid>
           </Box>

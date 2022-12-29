@@ -23,12 +23,18 @@ const CustomImage = styled("img")({
   marginTop: "1em",
   marginBottom: "1.5em",
 });
+const CustomModal = styled(Modal)`
+  .MuiBox-root {
+    background-color: #001e3c;
+    color: white;
+  }
+`;
 
 const ProfileModal = (props) => {
   // console.log("Modal USer : ", props.user);
   return (
     <div>
-      <Modal
+      <CustomModal
         open={props.open}
         onClose={props.close}
         aria-labelledby="modal-modal-title"
@@ -48,7 +54,7 @@ const ProfileModal = (props) => {
             {props.user.email}
           </Typography>
         </Box>
-      </Modal>
+      </CustomModal>
     </div>
   );
 };

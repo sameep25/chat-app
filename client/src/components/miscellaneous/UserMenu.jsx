@@ -70,7 +70,6 @@ const UserMenu = () => {
     <Box sx={{ marginLeft: "auto" }}>
       <IconButton
         size="large"
-        // aria-label="show 17 new notifications"
         color="inherit"
         onClick={handleNotificationMenu}
       >

@@ -9,3 +9,7 @@ export const getSenderEmail = (loggedUser ,users) =>{
 export const getSenderPicture = (loggedUser ,users) =>{
     return users[0]._id === loggedUser._id ? users[1].picture : users[0].picture ;
 }
+
+export const getSenderUser = (loggedUser ,users ) =>{
+    return users[0]._id === loggedUser._id ? users[1] : users[0] ;
+}

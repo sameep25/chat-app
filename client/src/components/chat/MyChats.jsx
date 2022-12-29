@@ -22,6 +22,7 @@ const Container = styled(Box)`
   color: white;
   height: 100%;
   overflow-y: scroll;
+  border-radius : 3px ;
 `;
 const Header = styled(Box)`
   // position: absolute;
@@ -39,7 +40,7 @@ const StyledButton = styled(Button)`
   font-family: work sans;
 `;
 
-const MyChats = () => {
+const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
   const { user, token, chats, setChats, selectedChat, setSelectedChat } =
     useContext(ChatContext);
@@ -76,7 +77,7 @@ const MyChats = () => {
   useEffect(() => {
     setLoggedUser(user);
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
 
   return (
     <>
