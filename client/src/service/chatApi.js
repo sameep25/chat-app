@@ -27,11 +27,26 @@ export const createNewGroupApi = async (config, groupData) => {
   }
 };
 
-
-export const renameGroupApi = async(config ,newChatName) => {
+export const renameGroupApi = async(config ,chatData) => {
   try{
-    return await axios.put(`${URL}/group/rename` ,newChatName , config) ;
+    return await axios.put(`${URL}/group/rename` ,chatData , config) ;
   }catch(error){
     console.log("Error while calling renameGroupApi " ,error);
+  }
+}
+
+export const addUserToGroupApi = async(config ,userData) => {
+  try{
+    return await axios.put(`${URL}/group/add` ,userData , config) ;
+  }catch(error){
+    console.log("Error while calling addUserToGroupApi " ,error);
+  }
+}
+
+export const removeUserFromGroupApi = async(config ,userData) => {
+  try{
+    return await axios.put(`${URL}/group/remove` ,userData , config) ;
+  }catch(error){
+    console.log("Error while calling removeUserFromGroupApi " ,error);
   }
 }

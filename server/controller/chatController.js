@@ -157,6 +157,10 @@ export const addToGroup = async (req, res) => {
 export const removeFromGroup = async (req, res) => {
   try {
     const { chatId, userId } = req.body;
+    if(!chatId || !userId){
+      res.status(400) ;
+      throw new Error("user-Id or Chat-Id is missing");
+    }
 
     const updatedChat = await Chat.findByIdAndUpdate(
       chatId,

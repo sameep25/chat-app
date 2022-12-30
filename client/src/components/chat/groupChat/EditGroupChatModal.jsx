@@ -3,7 +3,12 @@ import { useContext, useState, useEffect } from "react";
 
 import { ChatContext } from "../../../context/ChatProvider";
 import { searchUserApi } from "../../../service/userApi";
-import { createNewGroupApi, renameGroupApi } from "../../../service/chatApi";
+import {
+  createNewGroupApi,
+  renameGroupApi,
+  addUserToGroupApi,
+  removeUserFromGroupApi,
+} from "../../../service/chatApi";
 
 import UserListItem from "../../sideDrawer/UserListItem";
 import UserBadgeItem from "../UserBadgeItem";
@@ -141,19 +146,74 @@ const EditGroupChatModal = (props) => {
       setAlertType("error");
     }
   };
-  // adding users to selectedUser array
-  const addToGroup = (user) => {
-    if (selectedUsers.includes(user)) {
+
+  //add user to group
+  const handleAddUser = async (userToAdd) => {
+    if (selectedChat.users.find((user) => user._id === userToAdd._id)) {
       setLoading(true);
-      setAlertTitle("User already added");
-      setAlertType("info");
+      setAlertTitle("User already in Group");
+      setAlertType("error");
       return;
     }
-    setSelectedUsers([...selectedUsers, user]);
+
+    try {
+      setLoading(true);
+      setAlertTitle("Adding User in Group");
+      setAlertType("info");
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await addUserToGroupApi(config, {
+        chatId: selectedChat._id,
+        userId: userToAdd._id,
+      });
+      // console.log(data);
+
+      setAlertTitle("User added to Group");
+      setAlertType("success");
+      setSelectedChat(data);
+      props.setFetchAgain(!props.fetchAgain);
+      props.close();
+    } catch (error) {
+      setLoading(true);
+      setAlertTitle("Failed to Add : Try Again");
+      setAlertType("error");
+    }
   };
 
   //removing users from group
-  const handleRemove = () => {};
+  const handleRemove = async (userToDel) => {
+    try {
+      setLoading(true);
+      setAlertTitle("Removing User From Group");
+      setAlertType("info");
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await removeUserFromGroupApi(config, {
+        chatId: selectedChat._id,
+        userId: userToDel._id,
+      });
+
+      setAlertTitle("User Removed From Group");
+      setAlertType("success");
+      setSelectedChat(data);
+      props.setFetchAgain(!props.fetchAgain);
+      props.close();
+    } catch (error) {
+      setLoading(true);
+      setAlertTitle("Failed to Remove : Try Again");
+      setAlertType("error");
+    }
+  };
 
   //rename group
   const handleRename = async () => {
@@ -163,23 +223,23 @@ const EditGroupChatModal = (props) => {
       setAlertType("info");
       return;
     }
-
     try {
       setLoading(true);
-
+      setAlertTitle("Renaming Group");
+      setAlertType("info");
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-
       const { data } = await renameGroupApi(config, {
         chatId: selectedChat._id,
         chatName: groupChatname,
       });
       // console.log(data);
       setSelectedChat(data);
-      props.setFetchAgain(!props.fecthAgain);
+      props.setFetchAgain(!props.fetchAgain);
+      setGroupChatname("");
 
       setAlertTitle("Group renamed");
       setAlertType("success");
@@ -251,13 +311,14 @@ const EditGroupChatModal = (props) => {
               <UserBadgeItem
                 key={user._id}
                 user={user}
-                handleFunction={handleRemove}
+                handleFunction={() => handleRemove(user)}
               />
             ))}
           </Box>
 
           {/* chat name edit and search users  */}
           <Box sx={{ width: "100%", marginTop: "1em" }}>
+            {/* edit chat name */}
             <Box display={"flex"}>
               <StyledInputBase
                 placeholder="Change Chat name"
@@ -276,6 +337,7 @@ const EditGroupChatModal = (props) => {
               </StyledButton>
             </Box>
 
+            {/* search users to add*/}
             <StyledInputBase
               placeholder="Add User to Group"
               onChange={(e) => handleSerach(e.target.value)}
@@ -291,7 +353,7 @@ const EditGroupChatModal = (props) => {
                   <UserListItem
                     key={user._id}
                     user={user}
-                    handleFunction={() => addToGroup(user)}
+                    handleFunction={() => handleAddUser(user)}
                   />
                 ))}
           </UserListBox>
