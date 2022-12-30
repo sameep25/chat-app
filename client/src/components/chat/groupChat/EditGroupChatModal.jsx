@@ -4,10 +4,10 @@ import { useContext, useState, useEffect } from "react";
 import { ChatContext } from "../../../context/ChatProvider";
 import { searchUserApi } from "../../../service/userApi";
 import {
-  createNewGroupApi,
   renameGroupApi,
   addUserToGroupApi,
   removeUserFromGroupApi,
+  deleteGroupApi,
 } from "../../../service/chatApi";
 
 import UserListItem from "../../sideDrawer/UserListItem";
@@ -15,15 +15,11 @@ import UserBadgeItem from "../UserBadgeItem";
 
 import {
   Box,
-  Input,
   Typography,
   Modal,
   styled,
   Snackbar,
   Alert,
-  FormControl,
-  FormGroup,
-  FormLabel,
   Button,
   InputBase,
 } from "@mui/material";
@@ -250,36 +246,28 @@ const EditGroupChatModal = (props) => {
     }
   };
 
-  // edit group chat
-  const handleSumbit = async () => {
-    setLoading(true);
-    setAlertTitle("Creating group chat");
-    if (!groupChatname || !selectedUsers) {
-      setAlertTitle("Please fill all the fields");
-      setAlertType("warning");
-      return;
-    }
-
-    if (selectedUsers.length < 2) {
-      setAlertTitle("Add atleast 2 users");
-      setAlertType("warning");
-      return;
-    }
-
+  const deleteGroup = async () => {
     try {
-      const config = { headers: { Authorization: `Bearer ${token}` } };
+      setLoading(true);
+      setAlertTitle("Deleting Group");
+      setAlertType("info");
 
-      const { data } = await createNewGroupApi(config, {
-        name: groupChatname,
-        users: JSON.stringify(selectedUsers?.map((user) => user._id)),
-      });
-      setChats([data, ...chats]);
-      props.close();
-      setAlertTitle("New group-chat created");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await deleteGroupApi(config, selectedChat._id);
+
+      setAlertTitle("Group deleted successfully");
       setAlertType("success");
-      return;
+      setSelectedChat();
+      props.setFetchAgain(!props.fetchAgain);
+      props.close();
     } catch (error) {
-      setAlertTitle("Failed to create a group-chat");
+      setLoading(true);
+      setAlertTitle(error.message);
       setAlertType("error");
     }
   };
@@ -321,7 +309,7 @@ const EditGroupChatModal = (props) => {
             {/* edit chat name */}
             <Box display={"flex"}>
               <StyledInputBase
-                placeholder="Change Chat name"
+                placeholder="Change Group name"
                 onChange={(e) => {
                   setGroupChatname(e.target.value);
                 }}
@@ -339,12 +327,12 @@ const EditGroupChatModal = (props) => {
 
             {/* search users to add*/}
             <StyledInputBase
-              placeholder="Add User to Group"
+              placeholder="Add a User to Group"
               onChange={(e) => handleSerach(e.target.value)}
             />
           </Box>
 
-          {/* search user list */}
+          {/* searched user list */}
           <UserListBox>
             {searchResult &&
               searchResult
@@ -363,7 +351,7 @@ const EditGroupChatModal = (props) => {
             size="small"
             variant="outlined"
             color="error"
-            onClick={() => {}}
+            onClick={deleteGroup}
           >
             Delete Group
           </StyledButton>

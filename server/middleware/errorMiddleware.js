@@ -1,5 +1,5 @@
 // in middleware functions we take 3 arg (req ,res and next)
-// after main login is completed then move to next logic
+// after main logic is completed then move to next logic
 
 export const notFound = (req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl} `);

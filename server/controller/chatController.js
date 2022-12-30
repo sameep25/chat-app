@@ -136,7 +136,7 @@ export const addToGroup = async (req, res) => {
 
     const updatedChat = await Chat.findByIdAndUpdate(
       chatId,
-      { $push: { users: userId } },
+      { $push: { users: userId } }, //$push for pushing ele in array
       { new: true }
     )
       .populate("users", "-password")
@@ -157,14 +157,14 @@ export const addToGroup = async (req, res) => {
 export const removeFromGroup = async (req, res) => {
   try {
     const { chatId, userId } = req.body;
-    if(!chatId || !userId){
-      res.status(400) ;
+    if (!chatId || !userId) {
+      res.status(400);
       throw new Error("user-Id or Chat-Id is missing");
     }
 
     const updatedChat = await Chat.findByIdAndUpdate(
       chatId,
-      { $pull: { users: userId } },
+      { $pull: { users: userId } }, //$pull for removing ele from an array
       { new: true }
     )
       .populate("users", "-password")
@@ -176,6 +176,27 @@ export const removeFromGroup = async (req, res) => {
     } else {
       res.status(200).json(updatedChat);
     }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const deleteGroup = async (req, res) => {
+  try {
+    // console.log(req.params.id);
+    
+    // if (!chatId || !adminId) {
+    //   res.status(400);
+    //   throw new Error("user-Id or Admin-Id is missing");
+    // }
+
+    // if (adminId !== req.user._id) {
+    //   res.status(400);
+    //   throw new Error("Only Group Admin can delete group");
+    // }
+
+    await Chat.findByIdAndDelete(req.params.id)
+    res.status(200).json({message: "group deleted"}) ;
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

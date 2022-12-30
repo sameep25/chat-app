@@ -22,14 +22,25 @@ const TextContainer = styled(Box)`
   }
 `;
 
-const UserListItem = ({ user, handleFunction }) => {
+const UserListItem = ({ user, chat, handleFunction }) => {
   return (
     <Container onClick={handleFunction}>
       <Avatar src={user.picture} sx={{ width: 32, height: 32 }}></Avatar>
-      <TextContainer>
-        <Typography sx={{ fontSize: "small" }}>{user.name}</Typography>
-        <Typography sx={{ fontSize: "xx-small" }}>{user.email}</Typography>
-      </TextContainer>
+      {chat && chat.groupAdmin._id === user._id ? (
+        <>
+          <TextContainer >
+            <Typography sx={{ fontSize: "small" }}>{`Admin : ${user.name}`}</Typography>
+            <Typography sx={{ fontSize: "xx-small" }}>{user.email}</Typography>
+          </TextContainer>
+        </>
+      ) : (
+        <>
+          <TextContainer>
+            <Typography sx={{ fontSize: "small" }}>{user.name}</Typography>
+            <Typography sx={{ fontSize: "xx-small" }}>{user.email}</Typography>
+          </TextContainer>
+        </>
+      )}
     </Container>
   );
 };

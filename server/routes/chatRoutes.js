@@ -7,7 +7,8 @@ import {
   createGroupChat,
   renameGroupChat,
   addToGroup,
-  removeFromGroup
+  removeFromGroup,
+  deleteGroup
 } from "../controller/chatController.js";
 
 const chatRouter = express.Router();
@@ -18,5 +19,6 @@ chatRouter.post("/group/new", protect, createGroupChat);
 chatRouter.put("/group/rename", protect, renameGroupChat);
 chatRouter.put("/group/add", protect, addToGroup);
 chatRouter.put("/group/remove",protect ,removeFromGroup) ;
+chatRouter.delete("/group/delete/:id",protect ,deleteGroup) ;
 
 export default chatRouter;

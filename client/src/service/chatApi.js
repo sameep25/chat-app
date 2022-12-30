@@ -50,3 +50,12 @@ export const removeUserFromGroupApi = async(config ,userData) => {
     console.log("Error while calling removeUserFromGroupApi " ,error);
   }
 }
+
+export const deleteGroupApi = async(config ,chatId) =>{
+  try{
+    console.log(chatId);
+    return await axios.delete(`${URL}/group/delete/${chatId}`,config ) ;
+  }catch(error){
+    console.log("Error while calling deleteGroupApi " ,error);
+  }
+}

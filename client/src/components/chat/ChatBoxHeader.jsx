@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { ChatContext } from "../../context/ChatProvider";
 import { getSenderName } from "../../config/ChatLogics";
 import EditGroupChatModal from "./groupChat/EditGroupChatModal";
+import GroupDetailsModal from "./groupChat/GroupDetailsModal";
 import ProfileModal from "../miscellaneous/ProfileModal";
 import { getSenderUser } from "../../config/ChatLogics";
 
@@ -24,6 +25,8 @@ const Header = styled(Box)`
 const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedChat, setSelectedChat } = useContext(ChatContext);
   // gruop chat modal
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openGroupModal, setOpenGroupModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
@@ -52,7 +55,7 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
                     <IconButton
                       size="medium"
                       color="inherit"
-                      onClick={() => setSelectedChat()}
+                      onClick={() => setOpenGroupModal(true)}
                     >
                       <InfoIcon />
                     </IconButton>
@@ -62,7 +65,7 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
                       <IconButton
                         size="medium"
                         color="inherit"
-                        onClick={() => setOpenModal(true)}
+                        onClick={() => setOpenEditModal(true)}
                       >
                         <EditIcon />
                       </IconButton>
@@ -72,15 +75,24 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
                   )}
                 </Box>
 
+                <GroupDetailsModal
+                  chat={selectedChat}
+                  open={openGroupModal}
+                  fetchAgain={fetchAgain}
+                  setFetchAgain={setFetchAgain}
+                  close={() => setOpenGroupModal(false)}
+                />
+
                 <EditGroupChatModal
                   fetchAgain={fetchAgain}
                   setFetchAgain={setFetchAgain}
-                  open={openModal}
-                  close={() => setOpenModal(false)}
+                  open={openEditModal}
+                  close={() => setOpenEditModal(false)}
                 />
               </>
             ) : (
               <>
+              {/* Single User Profile Info */}
                 <Box sx={{ marginLeft: "auto", marginRight: "1em" }}>
                   <Tooltip title="Info" arrow>
                     <IconButton
@@ -92,7 +104,6 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
                     </IconButton>
                   </Tooltip>
                 </Box>
-
                 <ProfileModal
                   open={openModal}
                   close={() => setOpenModal(false)}
