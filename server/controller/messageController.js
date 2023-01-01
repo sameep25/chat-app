@@ -2,6 +2,7 @@ import Chat from "../schema/chatSchema.js";
 import Message from "../schema/messageSchema.js";
 import User from "../schema/userSchema.js";
 
+// send message to single or group chat
 export const sendMessage = async (req, res) => {
   try {
     const { content, chatId } = req.body;
@@ -29,4 +30,20 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-export const getMessages = async (req, res) => {};
+// fetch messages for single or group chat
+export const getMessages = async (req, res) => {
+  try {
+    const chatId = req.params.chatId;
+    console.log(chatId);
+    if (!chatId) throw new Error("chat-id not received");
+
+    const messages = await Message.find({ chat: chatId })
+      .populate("sender", "name picture email")
+      .populate("chat");
+
+      return res.status(200).json(messages) ;
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ message: error.message });
+  }
+};

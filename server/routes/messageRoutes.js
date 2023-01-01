@@ -5,6 +5,6 @@ import {sendMessage ,getMessages} from "../controller/messageController.js" ;
 const messageRouter = express.Router();
 
 messageRouter.post("/send" ,protect ,sendMessage) ;
-messageRouter.get("/get/:ChatId",protect ,getMessages) ;
+messageRouter.get("/get/:chatId",protect ,getMessages) ;
 
 export default messageRouter;
