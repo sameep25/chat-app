@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
+import { fetchMessagesApi } from "../../service/messagesApi";
 
 import {
   Box,
@@ -21,30 +22,49 @@ const Container = styled(Box)`
   border: 1px solid white;
 `;
 
-const SpinnerContainer = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`;
+const ChatingBox = ({ messages, setMessages }) => {
+  const { user, selectedChat, setSelectedChat, token } =
+    useContext(ChatContext);
 
-const ChatingBox = () => {
-  const { user, selectedChat, setSelectedChat } = useContext(ChatContext);
+  const [chatLoading, setChatLoading] = useState(false);
 
-  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [alertType, setAlertType] = useState("info");
-  // const [alertTitle, setAlertTitle] = useState("");
-  // const handleClose = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   setLoading(false);
-  // };
+  const [alertType, setAlertType] = useState("info");
+  const [alertTitle, setAlertTitle] = useState("");
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedChat]);
+
+  const fetchMessages = async () => {
+    if (!selectedChat) return;
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      setChatLoading(true);
+      const { data } = await fetchMessagesApi(config, selectedChat._id);
+      // console.log(data);
+      setMessages(data);
+      setChatLoading(false);
+    } catch (error) {
+      setLoading(true);
+      setAlertTitle("Failed to Fetch Chats : Refresh !");
+      setAlertType("error");
+    }
+  };
 
   return (
     <>
-      {loading ? (
+      {chatLoading ? (
         <>
           <Container>
             <CircularProgress />
@@ -56,11 +76,11 @@ const ChatingBox = () => {
         </>
       )}
 
-      {/* <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
+      <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
         <Alert severity={alertType} sx={{ width: "100%" }}>
           {alertTitle}
         </Alert>
-      </Snackbar> */}
+      </Snackbar>
     </>
   );
 };

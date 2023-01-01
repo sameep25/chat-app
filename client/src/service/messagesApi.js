@@ -9,3 +9,11 @@ export const sendMessageApi = async(config ,messageData) =>{
         console.log("Error while calling sendMessageApi : " ,error);
     }
 }
+
+export const fetchMessagesApi = async(config ,chatId) =>{
+    try{
+        return await axios.get(`${URL}/get/${chatId}` ,config) ;
+    }catch(error){
+        console.log("Error while calling fetchMessagesApi : " ,error);
+    }
+}

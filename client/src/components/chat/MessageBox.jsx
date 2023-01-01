@@ -5,7 +5,6 @@ import { sendMessageApi } from "../../service/messagesApi";
 
 import {
   Box,
-  Typography,
   styled,
   Alert,
   Snackbar,
@@ -22,13 +21,6 @@ const Container = styled(Box)`
   background: #0a1929;
   height: 10%;
   margin: 0.5em;
-`;
-
-const SpinnerContainer = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
 `;
 
 const StyledInputBase = styled(InputBase)`
@@ -63,6 +55,7 @@ const MessageBox = ({ messages, setMessages }) => {
     setLoading(false);
   };
 
+  // send message
   const sendMessage = async (e) => {
     e.preventDefault();
     let message = newMessage.trim();
@@ -87,7 +80,7 @@ const MessageBox = ({ messages, setMessages }) => {
         config
       );
       // console.log(data);
-      
+
       setMessages([...messages, data]);
     } catch (error) {
       setLoading(true);
