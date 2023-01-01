@@ -15,13 +15,15 @@ const Container = styled(Box)`
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedChat, setSelectedChat } = useContext(ChatContext);
 
+  const [messages, setMessages] = useState([]) ;
+
   return (
     <>
       {selectedChat ? (
         <>
           <Container>
-            <ChatingBox />
-            <MessageBox />
+            <ChatingBox messages={messages} setMessages={setMessages} />
+            <MessageBox messages={messages} setMessages={setMessages}/>
           </Container>
         </>
       ) : (
