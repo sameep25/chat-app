@@ -3,7 +3,10 @@ import { useContext, useState } from "react";
 import { ChatContext } from "../../../context/ChatProvider";
 import UserListItem from "../../sideDrawer/UserListItem";
 
-import { removeUserFromGroupApi,deleteGroupApi } from "../../../service/chatApi";
+import {
+  removeUserFromGroupApi,
+  deleteGroupApi,
+} from "../../../service/chatApi";
 
 import {
   Box,
@@ -20,7 +23,7 @@ const StyledButton = styled(Button)`
   margin: 0 1em 0 1em;
   min-width: 18%;
   font-family: work sans;
-  font-weight: 600;
+  font-weight: 700;
 
   // background-color: #2e3b49;
   // color: white;
@@ -101,6 +104,7 @@ const GroupDetailsModal = (props) => {
     }
   };
 
+  // delete Modal
   const deleteGroup = async () => {
     try {
       setLoading(true);
@@ -127,7 +131,6 @@ const GroupDetailsModal = (props) => {
     }
   };
 
-
   return (
     <div>
       <CustomModal
@@ -137,20 +140,31 @@ const GroupDetailsModal = (props) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          {/* Group Name */}
           <Typography
             variant="h6"
-            sx={{ fontFamily: "work sans", fontWeight: "600" }}
+            sx={{ fontFamily: "work sans", fontWeight: "500" }}
           >
             {props.chat.chatName}
           </Typography>
 
-          <UserListBox>
-            {props.chat.users?.map((user) => (
-              <UserListItem key={user._id} user={user} chat={props.chat} />
-            ))}
-          </UserListBox>
+          {/* group details */}
+          <Box sx={{ marginRight: "auto", overflowY: "scroll" }}>
+            {/* Group Length */}
+            <Typography sx={{ fontFamily: "work sans", fontSize: "0.7em" }}>
+              {`${props.chat.users.length} participants`}
+            </Typography>
+
+            {/* Group users list */}
+            <UserListBox>
+              {props.chat.users?.map((user) => (
+                <UserListItem key={user._id} user={user} chat={props.chat} />
+              ))}
+            </UserListBox>
+          </Box>
 
           {user._id === props.chat.groupAdmin._id ? (
+            //delete group if admin
             <>
               <StyledButton
                 size="small"
@@ -162,6 +176,7 @@ const GroupDetailsModal = (props) => {
               </StyledButton>
             </>
           ) : (
+            // leave group id not admin
             <>
               <StyledButton
                 size="small"
