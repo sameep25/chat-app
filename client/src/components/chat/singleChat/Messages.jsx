@@ -3,6 +3,11 @@ import { Box, styled } from "@mui/system";
 import { useContext } from "react";
 
 import { ChatContext } from "../../../context/ChatProvider";
+import {
+  isLastMessage,
+  isSameSender,
+  isFirstMessage,
+} from "../../../config/ChatLogics";
 
 const SenderBox = styled(Box)`
   display: flex;
@@ -22,24 +27,72 @@ const MessageText = styled(Typography)`
   border-radius: 8px;
   margin-top: 2px;
   overflow-wrap: break-word;
-  font-family : work sans ;
+  font-family: work sans;
 `;
 
-const Messages = ({ message }) => {
+const SenderName = styled(Typography)`
+font-family: work sans;
+font-size: 0.7rem;
+color: aquamarine;
+
+`
+
+const Messages = ({ message, messages, index }) => {
   const { user } = useContext(ChatContext);
   return (
     <>
-      {message && message.sender.email === user.email ? (
+      {message.chat.isGroupChat ? (
         <>
-          <SenderBox>
-            <MessageText sx={{background:"#004c99"}}>{message.content}</MessageText>
-          </SenderBox>
+          {message && message.sender.email === user.email ? (
+            <>
+              <SenderBox>
+                <MessageText sx={{ background: "#004c99" }}>
+                  {message.content}
+                </MessageText>
+              </SenderBox>
+            </>
+          ) : (
+            <>
+              {isFirstMessage(messages, index) ? (
+                <>
+                  <ReceiverBox>
+                    <MessageText sx={{ background: "#2e3b49" }}>
+                      <SenderName >{message.sender.name}</SenderName>
+                      {message.content}
+                    </MessageText>
+                  </ReceiverBox>
+                </>
+              ) : (
+                <>
+                  <ReceiverBox>
+                    <MessageText sx={{ background: "#2e3b49" }}>
+                      {message.content}
+                    </MessageText>
+                  </ReceiverBox>
+                </>
+              )}
+            </>
+          )}
         </>
       ) : (
         <>
-          <ReceiverBox>
-            <MessageText sx={{background:"#2e3b49"}}>{message.content}</MessageText>
-          </ReceiverBox>
+          {message && message.sender.email === user.email ? (
+            <>
+              <SenderBox>
+                <MessageText sx={{ background: "#004c99" }}>
+                  {message.content}
+                </MessageText>
+              </SenderBox>
+            </>
+          ) : (
+            <>
+              <ReceiverBox>
+                <MessageText sx={{ background: "#2e3b49" }}>
+                  {message.content}
+                </MessageText>
+              </ReceiverBox>
+            </>
+          )}
         </>
       )}
     </>

@@ -142,8 +142,8 @@ const ChatingBox = ({ messages, setMessages }) => {
           {/* All Messages */}
           <MessagesContainer>
             {messages &&
-              messages.map((message) => (
-                <Messages key={message._id} message={message} />
+              messages.map((message ,index) => (
+                <Messages key={message._id} message={message} messages={messages} index={index}/>
               ))}
             <Typography
               sx={{ background: "#0a1929", height: "5px" }}
