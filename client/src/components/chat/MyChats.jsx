@@ -25,7 +25,6 @@ const Container = styled(Box)`
   border-radius : 3px ;
 `;
 const Header = styled(Box)`
-  // position: absolute;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #2e3b49;

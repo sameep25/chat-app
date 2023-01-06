@@ -1,7 +1,8 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
-import { fetchMessagesApi } from "../../service/messagesApi";
+import { fetchMessagesApi, sendMessageApi } from "../../service/messagesApi";
+import Messages from "./singleChat/Messages";
 
 import {
   Box,
@@ -10,23 +11,51 @@ import {
   Alert,
   Snackbar,
   CircularProgress,
+  InputBase,
+  IconButton,
 } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
-const Container = styled(Box)`
+const MessagesContainer = styled(Box)`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  background: #0a1929;
+  padding: 0.5em;
+  margin-left: 5px;
+  margin-right: 5px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  height: 90%;
+  border-bottom: 1px solid #2e3b49;
+`;
+const NewMessageContainer = styled(Box)`
+  display: flex;
+  justify-content: left;
   align-items: center;
   background: #0a1929;
-  height: 85%;
-  margin: 0.5em;
-  border: 1px solid white;
+`;
+const StyledInputBase = styled(InputBase)`
+  color: white;
+  font-family: work sans;
+  width: 100%;
+  margin : 0.3em 0 0.3em 0.5em ;
+  & > :hover {
+    background: #2e3b49;
+  }
+  & > textarea {
+    border-radius: 3px;
+    padding: 0.3em;
+  }
 `;
 
 const ChatingBox = ({ messages, setMessages }) => {
+  const myRef = useRef(null);
+  const executeScroll = () => myRef.current.scrollIntoView();
   const { user, selectedChat, setSelectedChat, token } =
     useContext(ChatContext);
 
   const [chatLoading, setChatLoading] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
@@ -40,6 +69,7 @@ const ChatingBox = ({ messages, setMessages }) => {
 
   useEffect(() => {
     fetchMessages();
+    executeScroll();
   }, [selectedChat]);
 
   const fetchMessages = async () => {
@@ -55,9 +85,46 @@ const ChatingBox = ({ messages, setMessages }) => {
       // console.log(data);
       setMessages(data);
       setChatLoading(false);
+      return;
     } catch (error) {
       setLoading(true);
       setAlertTitle("Failed to Fetch Chats : Refresh !");
+      setAlertType("error");
+    }
+  };
+
+  // send message
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    let message = newMessage.trim();
+    if (!message) {
+      setLoading(true);
+      setAlertTitle("Type a message...");
+      setAlertType("info");
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      setNewMessage("");
+      const { data } = await sendMessageApi(
+        {
+          chatId: selectedChat._id,
+          content: message,
+        },
+        config
+      );
+      // console.log(data);
+
+      setMessages([...messages, data]);
+      executeScroll();
+      return;
+    } catch (error) {
+      setLoading(true);
+      setAlertTitle("Failed to send Message : Try Again");
       setAlertType("error");
     }
   };
@@ -66,13 +133,43 @@ const ChatingBox = ({ messages, setMessages }) => {
     <>
       {chatLoading ? (
         <>
-          <Container>
+          <MessagesContainer sx={{justifyContent:"center" ,alignItems:"center"}}>
             <CircularProgress />
-          </Container>
+          </MessagesContainer>
         </>
       ) : (
         <>
-          <Container>{/* Messages */}</Container>
+          {/* All Messages */}
+          <MessagesContainer>
+            {messages &&
+              messages.map((message) => (
+                <Messages key={message._id} message={message} />
+              ))}
+            <Typography
+              sx={{ background: "#0a1929", height: "5px" }}
+              ref={myRef}
+            ></Typography>
+          </MessagesContainer>
+          {/* new message */}
+          <NewMessageContainer>
+            <StyledInputBase
+              onKeyDown={(e) => {
+                if (e.key === "Enter") sendMessage(e);
+              }}
+              multiline
+              value={newMessage}
+              maxRows={"1"}
+              placeholder="Type a message..."
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <IconButton
+              sx={{ color: "whitesmoke" }}
+              size="medium"
+              onClick={sendMessage}
+            >
+              <SendIcon />
+            </IconButton>
+          </NewMessageContainer>
         </>
       )}
 

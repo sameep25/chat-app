@@ -6,6 +6,7 @@
   background-image: url("./background.png");
   background-size: cover;
   background-position: center;
+  scroll-behavior: smooth;
 }
 
 .css-x07y5q-MuiInputBase-root-MuiInput-root {

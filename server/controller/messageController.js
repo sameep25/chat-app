@@ -15,7 +15,7 @@ export const sendMessage = async (req, res) => {
 
     let message = await Message.create(newMessage);
 
-    message = await message.populate("sender", "name picture");
+    message = await message.populate("sender", "name picture email");
     message = await message.populate("chat");
     message = await User.populate(message, {
       path: "chat.users",
@@ -34,7 +34,7 @@ export const sendMessage = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const chatId = req.params.chatId;
-    console.log(chatId);
+    // console.log(chatId);
     if (!chatId) throw new Error("chat-id not received");
 
     const messages = await Message.find({ chat: chatId })

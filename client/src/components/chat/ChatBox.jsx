@@ -2,31 +2,53 @@ import { useContext } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 
-import { Box, styled } from "@mui/material";
-import SingleChat from "./singleChat/SingleChat";
+import { Box, styled, Typography } from "@mui/material";
 import ChatBoxHeader from "./ChatBoxHeader";
+import ChatingBox from "./ChatingBox";
 
 const Container = styled(Box)`
-  margin: 0.5em;
+  margin-top: 0.5em;
+  margin-right: 0.5em;
   color: white;
   height: 100%;
   overflow-y: scroll;
   border-radius: 3px;
   display: flex;
-   flex-direction: column;
+  flex-direction: column;
   justify-content: center;
-  background:#0a1929 ;
+  background: #0a1929;
   // background: #001e3c;
-  `;
+`;
 // display={selectedChat ? "flex" : "none"}
-const ChatBox = ({ fetchAgain, setFetchAgain }) => {
+const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
   const { user, selectedChat } = useContext(ChatContext);
 
   return (
-    <Container>
-      <ChatBoxHeader fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>
-      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
-    </Container>
+    <>
+      {selectedChat ? (
+        <>
+          <Container>
+            <ChatBoxHeader
+              fetchAgain={fetchAgain}
+              setFetchAgain={setFetchAgain}
+            />
+            <ChatingBox messages={messages} setMessages={setMessages} />
+          </Container>
+        </>
+      ) : (
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography fontFamily={"work sans"} variant="h5">
+            Click on a user to start chating
+          </Typography>
+        </Container>
+      )}
+    </>
   );
 };
 

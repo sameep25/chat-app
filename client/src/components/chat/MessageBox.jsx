@@ -20,20 +20,22 @@ const Container = styled(Box)`
   align-items: center;
   background: #0a1929;
   height: 10%;
-  margin: 0.5em;
+  margin: 0.3em;
 `;
 
 const StyledInputBase = styled(InputBase)`
   color: white;
   font-family: work sans;
-  width: 90%;
+  width: 100%;
 
-  margin-right: 1em;
+  margin-right: 0.5em;
+  margin-left: 0.5em;
+  margin-bottom: 0.2em;
   & > :hover {
     background: #2e3b49;
   }
   & > textarea {
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 0.5em;
   }
 `;
@@ -111,7 +113,11 @@ const MessageBox = ({ messages, setMessages }) => {
               placeholder="Type a message..."
               onChange={(e) => setNewMessage(e.target.value)}
             />
-            <IconButton size="medium" color="inherit" onClick={sendMessage}>
+            <IconButton
+              sx={{ color: "whitesmoke" }}
+              size="medium"
+              onClick={sendMessage}
+            >
               <SendIcon />
             </IconButton>
           </Container>

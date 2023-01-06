@@ -16,9 +16,10 @@ const Header = styled(Box)`
   display: flex;
   align-items: center;
   border-bottom: 1px solid #2e3b49;
-  padding: 0.5em 0 0.5em 1em;
-  width: 100%;
-  height: fit-content;
+  padding: 0.25em 0 0.25em 0;
+  width: auto;
+  height:fit-content ;
+  background: #0a1929;
   color: white;
 `;
 
@@ -92,9 +93,9 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
               </>
             ) : (
               <>
-              {/* Single User Profile Info */}
+                {/* Single User Profile Info */}
                 <Box sx={{ marginLeft: "auto", marginRight: "1em" }}>
-                  <Tooltip title="Info" arrow>
+                  <Tooltip title="User-Info" arrow>
                     <IconButton
                       size="medium"
                       color="inherit"

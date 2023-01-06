@@ -22,6 +22,7 @@ const CustomImage = styled("img")({
   borderRadius: "100%",
   marginTop: "1em",
   marginBottom: "1.5em",
+  objectFit : "cover" , 
 });
 const CustomModal = styled(Modal)`
   .MuiBox-root {
