@@ -38,6 +38,35 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
   console.log("connected to socket.io with socket-id: ", socket.id);
+
+  // creating a new room with user-data
+  socket.on("setup" ,(userData) =>{
+    socket.join(userData._id) ;
+    socket.emit("connection") ;
+  })
+
+  //joining a chat
+  socket.on("join-Chat" ,(room)=>{
+    socket.join(room) ;
+    console.log("User joined room : " ,room);
+  })
+
+  //messaging
+  socket.on("new-message" ,(newMessageRecieved) =>{
+    var chat = newMessageRecieved.chat ;
+
+    if(!chat.users) return console.log("chat.users is not defined");
+
+    chat.users.forEach((user) =>{
+      if(user._id === newMessageRecieved.sender._id) return ;
+
+      //sending message to user._id room to everyone except user himself
+      //in means inside that user room 
+      socket.in(user._id).emit("message-recieved" ,newMessageRecieved) ;
+    })
+
+  })
+
 });
 
 Connection(URL);

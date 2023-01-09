@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 
@@ -8,9 +8,7 @@ import ChatingBox from "./ChatingBox";
 
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:8000" ;
-var socket ,selectedChatCompare ;
-
+const ENDPOINT = "http://localhost:8000";
 
 const Container = styled(Box)`
   margin-top: 0.5em;
@@ -27,13 +25,36 @@ const Container = styled(Box)`
 `;
 // display={selectedChat ? "flex" : "none"}
 
-
 const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
   const { user, selectedChat } = useContext(ChatContext);
 
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [socket, setSocket] = useState();
+  const [selectedChatCompare, setSelectedChatCompare] = useState();
+
+  useEffect(() => {
+    const socketServer = io(ENDPOINT);
+    setSocket(socketServer);
+  }, []);
+
+  useEffect(() => {
+    socket && socket.emit("setup", user);
+    socket &&
+      socket.on("connection", () => {
+        setSocketConnected(true);
+      });
+  }, [socket]);
+
+  //recieving message from backend
   useEffect(() =>{
-    socket = io(ENDPOINT) ;
-  },[])
+    socket && socket.on("message-recieved", (newMessageRecieved)=>{
+      if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id){
+        //notifiation
+      }else{
+        setMessages([...messages ,newMessageRecieved])
+      }
+    })
+  },[messages])
 
   return (
     <>
@@ -43,8 +64,19 @@ const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
             <ChatBoxHeader
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
+              selectedChatCompare={selectedChatCompare}
+              setSelectedChatCompare={setSelectedChatCompare}
+              socket={socket}
+              setSocket={setSocket}
             />
-            <ChatingBox messages={messages} setMessages={setMessages} />
+            <ChatingBox
+              selectedChatCompare={selectedChatCompare}
+              setSelectedChatCompare={setSelectedChatCompare}
+              socket={socket}
+              setSocket={setSocket}
+              messages={messages}
+              setMessages={setMessages}
+            />
           </Container>
         </>
       ) : (

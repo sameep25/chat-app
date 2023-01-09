@@ -38,7 +38,7 @@ const StyledInputBase = styled(InputBase)`
   color: white;
   font-family: work sans;
   width: 100%;
-  margin : 0.3em 0 0.3em 0.5em ;
+  margin: 0.3em 0 0.3em 0.5em;
   & > :hover {
     background: #2e3b49;
   }
@@ -48,7 +48,14 @@ const StyledInputBase = styled(InputBase)`
   }
 `;
 
-const ChatingBox = ({ messages, setMessages }) => {
+const ChatingBox = ({
+  messages,
+  setMessages,
+  socket,
+  selectedChatCompare,
+  setSelectedChatCompare,
+}) => {
+  
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
   const { user, selectedChat, setSelectedChat, token } =
@@ -67,8 +74,10 @@ const ChatingBox = ({ messages, setMessages }) => {
     setLoading(false);
   };
 
+  //fetching messsages
   useEffect(() => {
     fetchMessages();
+    setSelectedChatCompare(selectedChat);
     executeScroll();
   }, [selectedChat]);
 
@@ -85,6 +94,9 @@ const ChatingBox = ({ messages, setMessages }) => {
       // console.log(data);
       setMessages(data);
       setChatLoading(false);
+
+      // making a room with chat id
+      socket && socket.emit("join-Chat", selectedChat._id);
       return;
     } catch (error) {
       setLoading(true);
@@ -119,6 +131,9 @@ const ChatingBox = ({ messages, setMessages }) => {
       );
       // console.log(data);
 
+      //sending messages to every user in room
+      socket.emit("new-message", data);
+
       setMessages([...messages, data]);
       executeScroll();
       return;
@@ -133,7 +148,9 @@ const ChatingBox = ({ messages, setMessages }) => {
     <>
       {chatLoading ? (
         <>
-          <MessagesContainer sx={{justifyContent:"center" ,alignItems:"center"}}>
+          <MessagesContainer
+            sx={{ justifyContent: "center", alignItems: "center" }}
+          >
             <CircularProgress />
           </MessagesContainer>
         </>
@@ -142,8 +159,13 @@ const ChatingBox = ({ messages, setMessages }) => {
           {/* All Messages */}
           <MessagesContainer>
             {messages &&
-              messages.map((message ,index) => (
-                <Messages key={message._id} message={message} messages={messages} index={index}/>
+              messages.map((message, index) => (
+                <Messages
+                  key={message._id}
+                  message={message}
+                  messages={messages}
+                  index={index}
+                />
               ))}
             <Typography
               sx={{ background: "#0a1929", height: "5px" }}
