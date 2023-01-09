@@ -2,12 +2,14 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 import Connection from "./database/db.js";
-import userRoutes from "./routes/userRoutes.js"
+import userRoutes from "./routes/userRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
-import messageRoutes from "./routes/messageRoutes.js"
-import { notFound ,errorHandler } from "./middleware/errorMiddleware.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
 app.use(cors());
@@ -18,8 +20,24 @@ dotenv.config();
 const PORT = process.env.PORT || 8000;
 const URL = process.env.MONGO_URI;
 
-app.listen(PORT, () => {
-  console.log(`app is running successfully on port : ${PORT}`);
+// const expressServer = app.listen(PORT, () => {
+//   console.log(`app is running successfully on port : ${PORT}`);
+// });
+
+const httpServer = createServer(app);
+httpServer.listen(PORT, () => {
+  console.log(`server is running successfully on port ${PORT}`);
+});
+
+const io = new Server(httpServer, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("connected to socket.io with socket-id: ", socket.id);
 });
 
 Connection(URL);
@@ -29,11 +47,11 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
-app.use("/api/chat", chatRoutes) ;
-app.use("/api/message", messageRoutes) ;
+app.use("/api/chat", chatRoutes);
+app.use("/api/message", messageRoutes);
 
-app.use(notFound)
-app.use(errorHandler)
+app.use(notFound);
+app.use(errorHandler);
 
 // const user = {name:"sameep" ,id:"1"} ;
 // app.get("/users" ,(req ,res) =>{

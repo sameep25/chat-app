@@ -1,10 +1,16 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 
 import { Box, styled, Typography } from "@mui/material";
 import ChatBoxHeader from "./ChatBoxHeader";
 import ChatingBox from "./ChatingBox";
+
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:8000" ;
+var socket ,selectedChatCompare ;
+
 
 const Container = styled(Box)`
   margin-top: 0.5em;
@@ -20,8 +26,14 @@ const Container = styled(Box)`
   // background: #001e3c;
 `;
 // display={selectedChat ? "flex" : "none"}
+
+
 const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
   const { user, selectedChat } = useContext(ChatContext);
+
+  useEffect(() =>{
+    socket = io(ENDPOINT) ;
+  },[])
 
   return (
     <>

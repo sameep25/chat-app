@@ -6,10 +6,6 @@ import { useNavigate } from "react-router-dom";
 import MyChats from "../components/chat/MyChats";
 import ChatBox from "../components/chat/ChatBox";
 import Navbar from "../components/chat/Navbar";
-import ChatBoxHeader from "../components/chat/ChatBoxHeader";
-import SingleChat from "../components/chat/singleChat/SingleChat";
-import ChatingBox from "../components/chat/ChatingBox";
-import MessageBox from "../components/chat/MessageBox";
 
 import { Grid, Box } from "@mui/material";
 
@@ -44,10 +40,6 @@ const ChatPage = () => {
                   messages={messages}
                   setMessages={setMessages}
                 />
-                {/* <ChatBoxHeader fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>
-                <ChatingBox messages={messages} setMessages={setMessages} /> */}
-                {/* <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} /> */}
-                {/* <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>{" "} */}
               </Grid>
             </Grid>
           </Box>

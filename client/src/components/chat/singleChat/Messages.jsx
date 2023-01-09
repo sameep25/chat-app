@@ -56,7 +56,7 @@ const Messages = ({ message, messages, index }) => {
               {isFirstMessage(messages, index) ? (
                 <>
                   <ReceiverBox>
-                    <MessageText sx={{ background: "#2e3b49" }}>
+                    <MessageText sx={{ background: "#2e3b49" ,marginTop:"0.5em"}}>
                       <SenderName >{message.sender.name}</SenderName>
                       {message.content}
                     </MessageText>
