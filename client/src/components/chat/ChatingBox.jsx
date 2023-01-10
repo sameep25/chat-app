@@ -4,6 +4,8 @@ import { ChatContext } from "../../context/ChatProvider";
 import { fetchMessagesApi, sendMessageApi } from "../../service/messagesApi";
 import Messages from "./singleChat/Messages";
 
+import Lottie from "lottie-react";
+import animationData from "../../animations/typing.json";
 import {
   Box,
   Typography,
@@ -54,8 +56,8 @@ const ChatingBox = ({
   socket,
   selectedChatCompare,
   setSelectedChatCompare,
+  socketConnected,
 }) => {
-  
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
   const { user, selectedChat, setSelectedChat, token } =
@@ -63,6 +65,8 @@ const ChatingBox = ({
 
   const [chatLoading, setChatLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
@@ -74,12 +78,46 @@ const ChatingBox = ({
     setLoading(false);
   };
 
+  socket.on("typing", () => {
+    // console.log("on typing");
+    setIsTyping(true);
+  });
+  socket.on("stop-typing", () => {
+    // console.log("on typing-stop");
+    setIsTyping(false);
+  });
+
   //fetching messsages
   useEffect(() => {
     fetchMessages();
     setSelectedChatCompare(selectedChat);
     executeScroll();
   }, [selectedChat]);
+
+  const typingHandler = (e) => {
+    setNewMessage(e.target.value);
+
+    if (!socketConnected) return;
+
+    if (!typing) {
+      setTyping(true);
+      socket && socket.emit("typing", selectedChat._id);
+    }
+
+    //stop typing after 3 sec
+    var lastTypingTime = new Date().getTime();
+    var timerLength = 4000;
+    setTimeout(() => {
+      console.log("time out called");
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+
+      if (timeDiff >= timerLength) {
+        socket && socket.emit("stop-typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
+  };
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -108,6 +146,7 @@ const ChatingBox = ({
   // send message
   const sendMessage = async (e) => {
     e.preventDefault();
+    socket.emit("stop-typing", selectedChat._id);
     let message = newMessage.trim();
     if (!message) {
       setLoading(true);
@@ -171,7 +210,24 @@ const ChatingBox = ({
               sx={{ background: "#0a1929", height: "5px" }}
               ref={myRef}
             ></Typography>
+            {isTyping ? (
+              <div>
+                {" "}
+                <Lottie
+                  animationData={animationData}
+                  style={{width:70 }}
+                  loop={true}
+                  autoplay={true}
+                />{" "}
+              </div>
+            ) : (
+              <></>
+            )}
+            
           </MessagesContainer>
+
+          
+          
           {/* new message */}
           <NewMessageContainer>
             <StyledInputBase
@@ -182,7 +238,8 @@ const ChatingBox = ({
               value={newMessage}
               maxRows={"1"}
               placeholder="Type a message..."
-              onChange={(e) => setNewMessage(e.target.value)}
+              onChange={typingHandler}
+              // onChange={(e) => setNewMessage(e.target.value)}
             />
             <IconButton
               sx={{ color: "whitesmoke" }}

@@ -32,11 +32,13 @@ const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
   const [socket, setSocket] = useState();
   const [selectedChatCompare, setSelectedChatCompare] = useState();
 
+  //initialzing socket server
   useEffect(() => {
     const socketServer = io(ENDPOINT);
     setSocket(socketServer);
   }, []);
 
+  //setting up the socket connection with userid
   useEffect(() => {
     socket && socket.emit("setup", user);
     socket &&
@@ -76,6 +78,7 @@ const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
               setSocket={setSocket}
               messages={messages}
               setMessages={setMessages}
+              socketConnected={socketConnected}
             />
           </Container>
         </>
