@@ -39,7 +39,7 @@ const StyledButton = styled(Button)`
   font-family: work sans;
 `;
 
-const MyChats = ({fetchAgain ,setSelectedChatCompare}) => {
+const MyChats = ({fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
   const { user, token, chats, setChats} =
     useContext(ChatContext);
@@ -99,7 +99,7 @@ const MyChats = ({fetchAgain ,setSelectedChatCompare}) => {
         {/* List of Chats */}
         <Box sx={{ marginLeft: "0.5em" }}>
           {chats &&
-            chats?.map((chat) => <ChatList key={chat._id} chat={chat} setSelectedChatCompare={setSelectedChatCompare}/>)}
+            chats?.map((chat) => <ChatList key={chat._id} chat={chat} />)}
         </Box>
       </Container>
 

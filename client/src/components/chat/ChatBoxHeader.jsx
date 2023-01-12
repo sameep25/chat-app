@@ -23,7 +23,7 @@ const Header = styled(Box)`
   color: white;
 `;
 
-const ChatBoxHeader = ({ fetchAgain, setFetchAgain  ,setSelectedChatCompare }) => {
+const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedChat, setSelectedChat } = useContext(ChatContext);
   // gruop chat modal
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -32,7 +32,6 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain  ,setSelectedChatCompare }) =
 
   const setChatState = () =>{
     setSelectedChat() 
-    setSelectedChatCompare()
   }
 
   return (

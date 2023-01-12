@@ -24,18 +24,13 @@ const ChatPage = () => {
   
   const [socket, setSocket] = useState();  
   const [socketConnected, setSocketConnected] = useState(false);
-  const [selectedChatCompare, setSelectedChatCompare] = useState();
-
+ 
     //initialzing socket server
     useEffect(() => {
       const socketServer = io(ENDPOINT);
       setSocket(socketServer);
-      setSelectedChatCompare(selectedChat) ;
     }, []);
 
-    // console.log(selectedChat);
-    // console.log(selectedChatCompare);
-  
     //setting up the socket connection with userid
     useEffect(() => {
       socket && socket.emit("setup", user);
@@ -54,7 +49,7 @@ const ChatPage = () => {
             <Grid container>
               <Grid sx={{ height: "87vh" }} item lg={3} md={4} sm={5.5} xs={12}>
                 {" "}
-                <MyChats fetchAgain={fetchAgain} setSelectedChatCompare={setSelectedChatCompare}/>{" "}
+                <MyChats fetchAgain={fetchAgain} />{" "}
               </Grid>
               <Grid sx={{ height: "87vh" }} item lg={9} md={8} sm={6.5} xs={12}>
                 {" "}
@@ -64,8 +59,6 @@ const ChatPage = () => {
                   setSocket={setSocket}
                   socket={socket}
                   socketConnected={socketConnected}
-                  selectedChatCompare={selectedChatCompare}
-                  setSelectedChatCompare={setSelectedChatCompare}
                 />
               </Grid>
             </Grid>

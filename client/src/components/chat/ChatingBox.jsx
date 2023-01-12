@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
+// MUI STYLED COMPONENTS
 const MessagesContainer = styled(Box)`
   display: flex;
   flex-direction: column;
@@ -50,24 +51,22 @@ const StyledInputBase = styled(InputBase)`
   }
 `;
 
-const ChatingBox = ({
-  messages,
-  setMessages,
-  socket,
-  selectedChatCompare,
-  setSelectedChatCompare,
-  socketConnected,
-}) => {
+const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
-  const { user, selectedChat, setSelectedChat, token } =
+  const { selectedChat, token, notifications, setNotifications } =
     useContext(ChatContext);
 
-  const [chatLoading, setChatLoading] = useState(false);
+  //messages state
+  const [messages, setMessages] = useState([]); //all messages in chat
   const [newMessage, setNewMessage] = useState("");
+
+  // realtime chat animation utils
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
+  //alerts states
+  const [chatLoading, setChatLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
   const [alertTitle, setAlertTitle] = useState("");
@@ -78,22 +77,45 @@ const ChatingBox = ({
     setLoading(false);
   };
 
+  // variabele to compare selected-chat and current chat with other users
+  var selectedChatCompare = selectedChat;
+  useEffect(() => {
+    selectedChatCompare = selectedChat;
+  }, [selectedChat]);
+
+  //recieving message from backend(socket) to either display message or give notification
+  useEffect(() => {
+    socket &&
+      socket.on("message-recieved", (newMessageRecieved) => {
+        if (
+          !selectedChatCompare ||
+          selectedChatCompare._id !== newMessageRecieved.chat._id
+        ) {
+          if (!notifications.includes(newMessageRecieved)) {
+            setNotifications([newMessageRecieved, ...notifications]);
+            setFetchAgain(!fetchAgain);
+          }
+        } else {
+          console.log("message");
+          setMessages([...messages, newMessageRecieved]);
+        }
+      });
+  }, [messages, notifications]);
+
   socket.on("typing", () => {
-    // console.log("on typing");
     setIsTyping(true);
   });
   socket.on("stop-typing", () => {
-    // console.log("on typing-stop");
     setIsTyping(false);
   });
 
   //fetching messsages
   useEffect(() => {
-    setSelectedChatCompare(selectedChat);
     fetchMessages();
     executeScroll();
   }, [selectedChat]);
 
+  //handeling message typing to give typing animation
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
@@ -119,6 +141,7 @@ const ChatingBox = ({
     }, timerLength);
   };
 
+  //featching messages of a chat
   const fetchMessages = async () => {
     if (!selectedChat) return;
     try {
@@ -143,7 +166,7 @@ const ChatingBox = ({
     }
   };
 
-  // send message
+  // send a new message
   const sendMessage = async (e) => {
     e.preventDefault();
     socket.emit("stop-typing", selectedChat._id);
@@ -215,7 +238,7 @@ const ChatingBox = ({
                 {" "}
                 <Lottie
                   animationData={animationData}
-                  style={{width:70 }}
+                  style={{ width: 70 }}
                   loop={true}
                   autoplay={true}
                 />{" "}
@@ -223,10 +246,8 @@ const ChatingBox = ({
             ) : (
               <></>
             )}
-            
           </MessagesContainer>
 
-        
           {/* new message input*/}
           <NewMessageContainer>
             <StyledInputBase

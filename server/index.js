@@ -36,11 +36,13 @@ const io = new Server(httpServer, {
   },
 });
 
+//socket related functions
 io.on("connection", (socket) => {
   // console.log("connected to socket.io with socket-id: ", socket.id);
 
   // creating a new room with user-data
   socket.on("setup", (userData) => {
+    console.log("setup");
     socket.join(userData._id);
     socket.emit("connection");
   });
@@ -63,7 +65,7 @@ io.on("connection", (socket) => {
       //sending message to user._id room to everyone except user himself
       //in means inside that user room
       socket.in(user._id).emit("message-recieved", newMessageRecieved);
-      console.log("sender:",newMessageRecieved.sender.name , "---> reciever:" ,user.name ,);
+      // console.log("sender:",newMessageRecieved.sender.name , "---> reciever:" ,user.name ,);
     });
   });
 

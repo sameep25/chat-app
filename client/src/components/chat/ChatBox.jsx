@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 
@@ -25,42 +25,10 @@ const ChatBox = ({
   fetchAgain,
   setFetchAgain,
   socket,
-  setSelectedChatCompare,
-  selectedChatCompare,
   setSocket,
   socketConnected,
 }) => {
-  const { user, selectedChat, notifications, setNotifications } =
-    useContext(ChatContext);
-
-  const [messages, setMessages] = useState([]);
-
-  //recieving message from backend
-
-  useEffect(() => {
-    socket &&
-      socket.on("message-recieved", (newMessageRecieved) => {
-        // console.log(newMessageRecieved.chat._id);
-        // console.log("selected chat id : " ,selectedChat._id || "no chat selected" );
-
-        if (
-          !selectedChatCompare ||
-          selectedChatCompare._id !== newMessageRecieved.chat._id
-        ) {
-          console.log("noti");
-          // console.log("newMessageRecieved:" ,newMessageRecieved );
-          // console.log("selectedChat:" ,selectedChat );
-          if (!notifications.includes(newMessageRecieved)) {
-            setNotifications([newMessageRecieved, ...notifications]);
-            setFetchAgain(!fetchAgain);
-          }
-        } else {
-          console.log("message");
-          setMessages([...messages, newMessageRecieved]);
-        }
-      });
-  }, [messages, notifications]);
-  console.log(notifications);
+  const { selectedChat } = useContext(ChatContext);
 
   return (
     <>
@@ -70,18 +38,12 @@ const ChatBox = ({
             <ChatBoxHeader
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
-              socket={socket}
-              setSocket={setSocket}
-              setSelectedChatCompare={setSelectedChatCompare}
-              selectedChatCompare={selectedChatCompare}
             />
             <ChatingBox
-              selectedChatCompare={selectedChatCompare}
-              setSelectedChatCompare={setSelectedChatCompare}
               socket={socket}
               setSocket={setSocket}
-              messages={messages}
-              setMessages={setMessages}
+              fetchAgain={fetchAgain}
+              setFetchAgain={setFetchAgain}
               socketConnected={socketConnected}
             />
           </Container>

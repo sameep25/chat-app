@@ -27,12 +27,11 @@ const TextContainer = styled(Box)`
   }
 `;
 
-const ChatList = ({ chat, setSelectedChatCompare }) => {
+const ChatList = ({ chat }) => {
   const { setSelectedChat, selectedChat, user } = useContext(ChatContext);
 
   const changeState = () =>{
     setSelectedChat(chat);
-    setSelectedChatCompare(chat);
   }
 
   return (

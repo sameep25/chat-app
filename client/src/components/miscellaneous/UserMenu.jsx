@@ -33,7 +33,7 @@ const StyledMenu = styled(Menu)`
 `;
 const UserMenu = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(ChatContext);
+  const { user, setUser ,notifications ,setNotifications } = useContext(ChatContext);
   // console.log("Menu USer : " ,user);
 
   // handing notefication menu
@@ -68,30 +68,39 @@ const UserMenu = () => {
 
   return (
     <Box sx={{ marginLeft: "auto" }}>
+      {/* Notifications Button */}
       <IconButton
         size="large"
         color="inherit"
         onClick={handleNotificationMenu}
       >
-        <Badge badgeContent={3} color="error">
+        <Badge badgeContent={notifications.length} color="error">
           <NotificationsIcon />
         </Badge>
       </IconButton>
 
+      {/* Notifications Menu*/}
       <StyledMenu
         anchorEl={notificationMenu}
         open={notificationOpen}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>1</MenuItem>
+        {
+          notifications && notifications?.map((notification) =>(
+            <MenuItem key={notification._id} onClick={handleClose}> {notification.content} </MenuItem>
+          ))
+        }
+        {/* <MenuItem onClick={handleClose}>1</MenuItem>
         <MenuItem onClick={handleClose}>2</MenuItem>
-        <MenuItem onClick={handleClose}>3</MenuItem>
+        <MenuItem onClick={handleClose}>3</MenuItem> */}
       </StyledMenu>
 
+      {/* Account Menu button */}
       <IconButton size="small" sx={{ ml: 2 }} onClick={handleAccountMenu}>
         <Avatar src={user.picture} sx={{ width: 32, height: 32 }}></Avatar>
       </IconButton>
 
+      {/* Account Menu */}
       <StyledMenu
         anchorEl={accountMenu}
         open={accountOpen}
@@ -112,6 +121,7 @@ const UserMenu = () => {
         </MenuItem>
       </StyledMenu>
 
+      {/* User Profile Details Modal */}
       <ProfileModal
         user={user}
         open={openModal}
