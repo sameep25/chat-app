@@ -10,23 +10,14 @@ import UserBadgeItem from "./UserBadgeItem";
 
 import {
   Box,
-  Input,
   Typography,
   Modal,
   styled,
   Snackbar,
   Alert,
-  FormControl,
-  FormGroup,
-  FormLabel,
   Button,
   InputBase,
 } from "@mui/material";
-
-const defaultGroupChat = {
-  name: "",
-  users: [],
-};
 
 const StyledButton = styled(Button)`
   background-color: #2e3b49;
@@ -86,6 +77,7 @@ const GroupChatModal = (props) => {
   const [searchResult, setSearchReasult] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [groupChatname, setGroupChatname] = useState("");
+
   //removing users from lists upon closing the modal
   useEffect(() => {
     if (props.open === false) {
@@ -148,7 +140,7 @@ const GroupChatModal = (props) => {
     setSelectedUsers(selectedUsers.filter((user) => user._id != delUser._id));
   };
 
-  //
+  // creating a group
   const handleSumbit = async () => {
     setLoading(true);
     setAlertTitle("Creating group chat");
@@ -161,7 +153,7 @@ const GroupChatModal = (props) => {
     if (selectedUsers.length < 2) {
       setAlertTitle("Add atleast 2 users");
       setAlertType("warning");
-      return ;
+      return;
     }
 
     try {
@@ -171,11 +163,11 @@ const GroupChatModal = (props) => {
         name: groupChatname,
         users: JSON.stringify(selectedUsers?.map((user) => user._id)),
       });
-      setChats([data , ...chats]) ;
-      props.close() ;
+      setChats([data, ...chats]);
+      props.close();
       setAlertTitle("New group-chat created");
       setAlertType("success");
-      return ;
+      return;
     } catch (error) {
       setAlertTitle("Failed to create a group-chat");
       setAlertType("error");
@@ -191,6 +183,7 @@ const GroupChatModal = (props) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          {/* Heading */}
           <Typography
             variant="h6"
             sx={{ fontFamily: "work sans", fontWeight: "500" }}
@@ -198,6 +191,7 @@ const GroupChatModal = (props) => {
             Create Group Chat
           </Typography>
 
+          {/* group details input */}
           <Box sx={{ width: "100%" }}>
             <StyledInputBase
               placeholder="Chat name"
@@ -237,6 +231,7 @@ const GroupChatModal = (props) => {
                 ))}
           </UserListBox>
 
+          {/* submit button to create group */}
           <StyledButton onClick={handleSumbit}>Create Chat</StyledButton>
         </Box>
       </CustomModal>

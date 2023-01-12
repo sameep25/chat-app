@@ -57,11 +57,13 @@ io.on("connection", (socket) => {
 
     if (!chat.users) return console.log("chat.users is not defined");
 
+    console.log("messaegs");
     chat.users.forEach((user) => {
       if (user._id === newMessageRecieved.sender._id) return;
       //sending message to user._id room to everyone except user himself
       //in means inside that user room
       socket.in(user._id).emit("message-recieved", newMessageRecieved);
+      console.log("sender:",newMessageRecieved.sender.name , "---> reciever:" ,user.name ,);
     });
   });
 

@@ -7,7 +7,7 @@ import {
   getSenderPicture,
 } from "../../config/ChatLogics";
 
-import { Box, Avatar, Typography, styled ,  Badge} from "@mui/material";
+import { Box, Avatar, Typography, styled, Badge } from "@mui/material";
 
 const Container = styled(Box)`
   display: flex;
@@ -27,13 +27,18 @@ const TextContainer = styled(Box)`
   }
 `;
 
-const ChatList = ({ chat }) => {
+const ChatList = ({ chat, setSelectedChatCompare }) => {
   const { setSelectedChat, selectedChat, user } = useContext(ChatContext);
+
+  const changeState = () =>{
+    setSelectedChat(chat);
+    setSelectedChatCompare(chat);
+  }
 
   return (
     <Container
       bgcolor={selectedChat === chat ? "#2e3b49" : "#0a1929"}
-      onClick={() => setSelectedChat(chat)}
+      onClick={changeState}
     >
       <Avatar
         src={
@@ -43,6 +48,7 @@ const ChatList = ({ chat }) => {
         }
         sx={{ width: 32, height: 32 }}
       ></Avatar>
+
       <TextContainer>
         <Typography sx={{ fontSize: "100%" }}>
           {!chat.isGroupChat ? getSenderName(user, chat.users) : chat.chatName}{" "}

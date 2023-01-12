@@ -39,9 +39,9 @@ const StyledButton = styled(Button)`
   font-family: work sans;
 `;
 
-const MyChats = ({fetchAgain}) => {
+const MyChats = ({fetchAgain ,setSelectedChatCompare}) => {
   const [loggedUser, setLoggedUser] = useState();
-  const { user, token, chats, setChats, selectedChat, setSelectedChat } =
+  const { user, token, chats, setChats} =
     useContext(ChatContext);
 
   // Alert Utils
@@ -81,6 +81,8 @@ const MyChats = ({fetchAgain}) => {
   return (
     <>
       <Container>
+        
+        {/* Heading */}
         <Header>
           <Typography
             variant="h5"
@@ -94,9 +96,10 @@ const MyChats = ({fetchAgain}) => {
           </StyledButton>
         </Header>
 
+        {/* List of Chats */}
         <Box sx={{ marginLeft: "0.5em" }}>
           {chats &&
-            chats?.map((chat) => <ChatList key={chat._id} chat={chat} />)}
+            chats?.map((chat) => <ChatList key={chat._id} chat={chat} setSelectedChatCompare={setSelectedChatCompare}/>)}
         </Box>
       </Container>
 

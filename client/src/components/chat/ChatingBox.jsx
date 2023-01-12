@@ -89,8 +89,8 @@ const ChatingBox = ({
 
   //fetching messsages
   useEffect(() => {
-    fetchMessages();
     setSelectedChatCompare(selectedChat);
+    fetchMessages();
     executeScroll();
   }, [selectedChat]);
 
@@ -226,9 +226,8 @@ const ChatingBox = ({
             
           </MessagesContainer>
 
-          
-          
-          {/* new message */}
+        
+          {/* new message input*/}
           <NewMessageContainer>
             <StyledInputBase
               onKeyDown={(e) => {

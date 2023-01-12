@@ -5,10 +5,11 @@ export const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);   // logged in user data
-  const [token, setToken] = useState("");   // logged in user - jwt token
-  const [chats, setChats] = useState([]) ;  // logged in user chats
+  const [user, setUser] = useState(null); // logged in user data
+  const [token, setToken] = useState(""); // logged in user - jwt token
+  const [chats, setChats] = useState([]); // logged in user chats
   const [selectedChat, setSelectedChat] = useState(); //
+  const [notifications, setNotifications] = useState([]); // notifications
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo")); // parse since data in stringify format
@@ -24,7 +25,19 @@ const ChatProvider = ({ children }) => {
   }, []);
 
   return (
-    <ChatContext.Provider value={{ user, setUser, token ,selectedChat, setSelectedChat ,chats, setChats}}>
+    <ChatContext.Provider
+      value={{
+        user,
+        setUser,
+        token,
+        selectedChat,
+        setSelectedChat,
+        chats,
+        setChats,
+        notifications,
+        setNotifications,
+      }}
+    >
       {children}
     </ChatContext.Provider>
   );

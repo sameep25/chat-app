@@ -6,10 +6,6 @@ import { Box, styled, Typography } from "@mui/material";
 import ChatBoxHeader from "./ChatBoxHeader";
 import ChatingBox from "./ChatingBox";
 
-import io from "socket.io-client";
-
-const ENDPOINT = "http://localhost:8000";
-
 const Container = styled(Box)`
   margin-top: 0.5em;
   margin-right: 0.5em;
@@ -25,38 +21,46 @@ const Container = styled(Box)`
 `;
 // display={selectedChat ? "flex" : "none"}
 
-const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
-  const { user, selectedChat } = useContext(ChatContext);
+const ChatBox = ({
+  fetchAgain,
+  setFetchAgain,
+  socket,
+  setSelectedChatCompare,
+  selectedChatCompare,
+  setSocket,
+  socketConnected,
+}) => {
+  const { user, selectedChat, notifications, setNotifications } =
+    useContext(ChatContext);
 
-  const [socketConnected, setSocketConnected] = useState(false);
-  const [socket, setSocket] = useState();
-  const [selectedChatCompare, setSelectedChatCompare] = useState();
-
-  //initialzing socket server
-  useEffect(() => {
-    const socketServer = io(ENDPOINT);
-    setSocket(socketServer);
-  }, []);
-
-  //setting up the socket connection with userid
-  useEffect(() => {
-    socket && socket.emit("setup", user);
-    socket &&
-      socket.on("connection", () => {
-        setSocketConnected(true);
-      });
-  }, [socket]);
+  const [messages, setMessages] = useState([]);
 
   //recieving message from backend
-  useEffect(() =>{
-    socket && socket.on("message-recieved", (newMessageRecieved)=>{
-      if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id){
-        //notifiation
-      }else{
-        setMessages([...messages ,newMessageRecieved])
-      }
-    })
-  },[messages])
+
+  useEffect(() => {
+    socket &&
+      socket.on("message-recieved", (newMessageRecieved) => {
+        // console.log(newMessageRecieved.chat._id);
+        // console.log("selected chat id : " ,selectedChat._id || "no chat selected" );
+
+        if (
+          !selectedChatCompare ||
+          selectedChatCompare._id !== newMessageRecieved.chat._id
+        ) {
+          console.log("noti");
+          // console.log("newMessageRecieved:" ,newMessageRecieved );
+          // console.log("selectedChat:" ,selectedChat );
+          if (!notifications.includes(newMessageRecieved)) {
+            setNotifications([newMessageRecieved, ...notifications]);
+            setFetchAgain(!fetchAgain);
+          }
+        } else {
+          console.log("message");
+          setMessages([...messages, newMessageRecieved]);
+        }
+      });
+  }, [messages, notifications]);
+  console.log(notifications);
 
   return (
     <>
@@ -66,10 +70,10 @@ const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
             <ChatBoxHeader
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
-              selectedChatCompare={selectedChatCompare}
-              setSelectedChatCompare={setSelectedChatCompare}
               socket={socket}
               setSocket={setSocket}
+              setSelectedChatCompare={setSelectedChatCompare}
+              selectedChatCompare={selectedChatCompare}
             />
             <ChatingBox
               selectedChatCompare={selectedChatCompare}
@@ -83,6 +87,7 @@ const ChatBox = ({ fetchAgain, setFetchAgain, messages, setMessages }) => {
           </Container>
         </>
       ) : (
+        // When no chat is selected
         <Container
           sx={{
             display: "flex",
