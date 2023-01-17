@@ -18,9 +18,8 @@ const ReceiverBox = styled(Box)`
   max-width: 55%;
 `;
 const MessageText = styled(Typography)`
-  // background: #2e3b49;
-  padding: 2px 6px 2px 6px;
-  border-radius: 8px;
+  padding: 0.1em 0.4em 0.1em 0.4em;
+  border-radius: 6px;
   margin-top: 2px;
   overflow-wrap: break-word;
   font-family: work sans;
@@ -51,7 +50,11 @@ const Messages = ({ message, messages, index }) => {
                 <>
                   <ReceiverBox>
                     <MessageText
-                      sx={{ background: "#2e3b49", marginTop: "0.5em" }}
+                      sx={{
+                        background: "#2e3b49",
+                        marginTop: "0.5em",
+                        borderTopLeftRadius: "0px",
+                      }}
                     >
                       <SenderName>{message.sender.name}</SenderName>
                       {message.content}

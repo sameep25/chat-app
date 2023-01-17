@@ -43,20 +43,23 @@ const ChatPage = () => {
     <>
       {user ? (
         <>
-          <Box sx={{ width: "100%", height: "100%" }}>
+          <Box
+            sx={{ width: "100%", maxHeight: "99vh", border: "1px solid white" }}
+          >
             <Navbar />
 
-            
             <Grid container>
-
               {/* MyChats */}
-              <Grid sx={{ height: "87vh" }} item lg={3} md={4} sm={5.5} xs={12}>
+              <Grid item lg={3} md={4} sm={5.5} xs={12}>
                 {" "}
-                <MyChats fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>{" "}
+                <MyChats
+                  fetchAgain={fetchAgain}
+                  setFetchAgain={setFetchAgain}
+                />{" "}
               </Grid>
 
               {/* ChatBox */}
-              <Grid sx={{ height: "87vh" }} item lg={9} md={8} sm={6.5} xs={12}>
+              <Grid item lg={9} md={8} sm={6.5} xs={12}>
                 {" "}
                 <ChatBox
                   fetchAgain={fetchAgain}
@@ -66,7 +69,6 @@ const ChatPage = () => {
                 />
               </Grid>
             </Grid>
-
           </Box>
         </>
       ) : (

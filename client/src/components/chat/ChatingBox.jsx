@@ -1,14 +1,11 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { fetchMessagesApi, sendMessageApi } from "../../service/messagesApi";
 import Messages from "./singleChat/Messages";
 
-import Lottie from "lottie-react";
-import animationData from "../../animations/typing.json";
 import {
   Box,
-  Typography,
   styled,
   Alert,
   Snackbar,
@@ -56,7 +53,7 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
 
   //messages state
   const [newMessage, setNewMessage] = useState("");
-  const [room ,setRoom] = useState() ;
+  const [room, setRoom] = useState(); //for storing current room 
 
   //alerts states
   const [chatLoading, setChatLoading] = useState(false);
@@ -74,35 +71,38 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
   useEffect(() => {
     fetchMessages();
   }, [selectedChat]);
+  
 
-  //featching messages of a chat
-  const fetchMessages = async () => {
-    if (!selectedChat) return;
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      setChatLoading(true);
-      const { data } = await fetchMessagesApi(config, selectedChat._id);
-      // console.log(data);
-      setMessages(data);
-      setChatLoading(false);
-
-      // making a room with chat id
-      if(room){
-        socket && socket.emit("leave-room" ,room) ;
+    //featching messages of a chat
+    const fetchMessages = async () => {
+      if (!selectedChat) return;
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        setChatLoading(true);
+        const { data } = await fetchMessagesApi(config, selectedChat._id);
+        // console.log(data);
+        setMessages(data);
+        setChatLoading(false);
+  
+        // leaving previouly connected room
+        if (room) {
+          socket && socket.emit("leave-room", room);
+        }
+        // making a room with chat id
+        socket && socket.emit("join-Chat", selectedChat._id);
+        setRoom(selectedChat._id);
+        return;
+      } catch (error) {
+        setLoading(true);
+        setAlertTitle("Failed to Fetch Chats : Refresh !");
+        setAlertType("error");
       }
-      socket && socket.emit("join-Chat", selectedChat._id);
-      setRoom(selectedChat._id) ;
-      return;
-    } catch (error) {
-      setLoading(true);
-      setAlertTitle("Failed to Fetch Chats : Refresh !");
-      setAlertType("error");
-    }
-  };
+    };
+  
 
   // send a new message
   const sendMessage = async (e) => {
@@ -121,7 +121,10 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
         },
       };
       setNewMessage("");
-      const { data } = await sendMessageApi({chatId: selectedChat._id, content: message },config);
+      const { data } = await sendMessageApi(
+        { chatId: selectedChat._id, content: message },
+        config
+      );
       //sending messages to every user in room
       socket.emit("new-message", data);
       setMessages([...messages, data]);
@@ -160,6 +163,8 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
 
           {/* new message input*/}
           <NewMessageContainer>
+
+            {/* Input Area */}
             <StyledInputBase
               onKeyDown={(e) => {
                 if (e.key === "Enter") sendMessage(e);
@@ -170,6 +175,8 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
               placeholder="Type a message..."
               onChange={(e) => setNewMessage(e.target.value)}
             />
+
+            {/* Message button */}
             <IconButton
               sx={{ color: "whitesmoke" }}
               size="medium"
@@ -177,6 +184,7 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
             >
               <SendIcon />
             </IconButton>
+
           </NewMessageContainer>
         </>
       )}

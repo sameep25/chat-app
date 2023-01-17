@@ -7,17 +7,16 @@ import ChatBoxHeader from "./ChatBoxHeader";
 import ChatingBox from "./ChatingBox";
 
 const Container = styled(Box)`
-  margin-top: 0.5em;
-  margin-right: 0.5em;
   color: white;
-  height: 100%;
-  overflow-y: scroll;
-  border-radius: 3px;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  border-radius: 3px;
+  height: 86vh ;
+  margin-right: 0.5em;
   justify-content: center;
   background: #0a1929;
-  // background: #001e3c;
 `;
 // display={selectedChat ? "flex" : "none"}
 

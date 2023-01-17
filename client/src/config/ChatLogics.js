@@ -15,10 +15,10 @@ export const getSenderUser = (loggedUser, users) => {
 };
 
 export const isFirstMessage = (messages, index) => {
-    if(index === 0) return true ;
-    return (
-      index > 0 &&
-      messages[index - 1].sender._id !== messages[index].sender._id ||
-      !messages[messages.length - 1].sender._id
-    );
-  };
+  if (index === 0) return true;
+  return (
+    (index > 0 &&
+      messages[index - 1].sender._id !== messages[index].sender._id) ||
+    !messages[messages.length - 1].sender._id
+  );
+};

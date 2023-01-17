@@ -29,6 +29,7 @@ httpServer.listen(PORT, () => {
   console.log(`server is running successfully on port ${PORT}`);
 });
 
+//intialise socket server
 const io = new Server(httpServer, {
   pingTimeout: 60000,
   cors: {
@@ -42,14 +43,12 @@ io.on("connection", (socket) => {
 
   //leaving previous room
   socket.on("leave-room" ,(room) =>{
-    // console.log("room left : " ,room);
     socket.leave(room) ;
   })
 
   //joining a chat with chatId
   socket.on("join-Chat", (room) => {
     socket.join(room);
-    // console.log("User joined room : " ,room);
   });
 
   //messaging

@@ -19,11 +19,13 @@ import AddIcon from "@mui/icons-material/Add";
 // MUI STYLED COMPONENTS
 const Container = styled(Box)`
   background: #0a1929;
-  margin: 0.5em;
   color: white;
-  height: 100%;
+  height: 86vh ;
+  width: 95%;
+  display : flex ;
+  overflow-y : scroll ;
+  margin : 0 0.5em 0.5em 0.5em ;
   border-radius: 3px;
-  display: flex;
   flex-direction: column;
   scroll-behavior: smooth;
 `;
@@ -43,7 +45,7 @@ const StyledButton = styled(Button)`
 `;
 
 const MyChats = ({ fetchAgain, setFetchAgain }) => {
-  const { token, chats, setChats } = useContext(ChatContext);
+  const { token, chats, setChats ,selectedChat } = useContext(ChatContext);
 
   // Alert Utils
   const [loading, setLoading] = useState(false);
@@ -81,7 +83,7 @@ const MyChats = ({ fetchAgain, setFetchAgain }) => {
 
   return (
     <>
-      <Container>
+      <Container >
         <Header>
           {/* Heading */}
           <Typography
@@ -109,7 +111,7 @@ const MyChats = ({ fetchAgain, setFetchAgain }) => {
             </Box>
           </>
         ) : (
-          <>loadinf</>
+          <></>
         )}
       </Container>
 

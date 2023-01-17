@@ -15,7 +15,7 @@ const TitleText = styled(Typography)`
 
 const Navbar = () => {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{marginBottom : "0.5em" }} >
       <AppBar sx={{ background: "#0a1929" }} position="static">
         <Toolbar>
           <SearchBar />

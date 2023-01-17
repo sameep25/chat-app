@@ -91,9 +91,6 @@ const GroupDetailsModal = (props) => {
         chatId: selectedChat._id,
         userId: user._id,
       });
-      console.log(data);
-      setAlertTitle("Group Left");
-      setAlertType("success");
       setSelectedChat();
       props.setFetchAgain(!props.fetchAgain);
       props.close();
@@ -119,8 +116,6 @@ const GroupDetailsModal = (props) => {
 
       const { data } = await deleteGroupApi(config, selectedChat._id);
 
-      setAlertTitle("Group deleted successfully");
-      setAlertType("success");
       setSelectedChat();
       props.setFetchAgain(!props.fetchAgain);
       props.close();
@@ -176,7 +171,7 @@ const GroupDetailsModal = (props) => {
               </StyledButton>
             </>
           ) : (
-            // leave group id not admin
+            // leave group if not admin
             <>
               <StyledButton
                 size="small"
