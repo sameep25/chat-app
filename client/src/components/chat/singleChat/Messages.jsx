@@ -47,6 +47,7 @@ const Messages = ({ message, messages, index }) => {
           ) : (
             <>
               {isFirstMessage(messages, index) ? (
+                //  First message by a user
                 <>
                   <ReceiverBox>
                     <MessageText
@@ -62,6 +63,7 @@ const Messages = ({ message, messages, index }) => {
                   </ReceiverBox>
                 </>
               ) : (
+                //  Not First message by a user
                 <>
                   <ReceiverBox>
                     <MessageText sx={{ background: "#2e3b49" }}>

@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect , useRef } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { fetchMessagesApi, sendMessageApi } from "../../service/messagesApi";
@@ -51,6 +51,7 @@ const StyledInputBase = styled(InputBase)`
 const ChatingBox = ({ socket, setMessages, messages }) => {
   const { selectedChat, token } = useContext(ChatContext);
 
+  const scrollRef = useRef() ;
   //messages state
   const [newMessage, setNewMessage] = useState("");
   const [room, setRoom] = useState(); //for storing current room 
@@ -102,7 +103,10 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
         setAlertType("error");
       }
     };
-  
+
+    useEffect(() =>{
+      scrollRef.current.scrollIntoView() ;
+    },[messages])
 
   // send a new message
   const sendMessage = async (e) => {
@@ -149,7 +153,7 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
       ) : (
         <>
           {/* All Messages */}
-          <MessagesContainer>
+          <MessagesContainer  >
             {messages &&
               messages.map((message, index) => (
                 <Messages
@@ -159,6 +163,7 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
                   index={index}
                 />
               ))}
+              <div ref={scrollRef}></div>
           </MessagesContainer>
 
           {/* new message input*/}

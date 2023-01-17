@@ -13,10 +13,12 @@ import { Grid, Box } from "@mui/material";
 const ENDPOINT = "http://localhost:8000";
 
 const ChatPage = () => {
-  const { user } = useContext(ChatContext);
+  const { user, selectedChat } = useContext(ChatContext);
 
   const navigate = useNavigate();
   const [fetchAgain, setFetchAgain] = useState(false); // to fetch chats again from db
+    
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   // if user null navigate to "/"
   useEffect(() => {
@@ -34,41 +36,81 @@ const ChatPage = () => {
     setSocket(socketServer);
   }, []);
 
-  //setting up the socket connection with userid
-  // useEffect(() => {
-  //   socket && socket.emit("setup", user);
-  // }, [socket]);
+  //handling window size 
+  useEffect(() => {
+    handleWindowResize() ;
+    window.addEventListener("resize", handleWindowResize);
+  }, []);
+
+  const handleWindowResize = () => {
+    if (window.innerWidth >= 600) setIsSmallScreen(false);
+    else setIsSmallScreen(true);
+  };
+
 
   return (
     <>
       {user ? (
         <>
-          <Box
-            sx={{ width: "100%", maxHeight: "99vh", border: "1px solid white" }}
-          >
+          <Box sx={{ width: "100%", maxHeight: "100vh" }}>
             <Navbar />
 
-            <Grid container>
-              {/* MyChats */}
-              <Grid item lg={3} md={4} sm={5.5} xs={12}>
-                {" "}
-                <MyChats
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                />{" "}
-              </Grid>
+            {isSmallScreen ? (
+              <>
+                <Grid container>
+                  {!selectedChat ? (
+                    <>
+                      <Grid item lg={3} md={4} sm={5.5} xs={12}  >
+                        {" "}
+                        <MyChats
+                          fetchAgain={fetchAgain}
+                          setFetchAgain={setFetchAgain}
+                        />{" "}
+                      </Grid>
+                    </>
+                  ) : (
+                    <>
+                      <Grid item lg={9} md={8} sm={6.5} xs={12} sx={{marginLeft : "0.5em"}}>
+                        {" "}
+                        <ChatBox
+                          fetchAgain={fetchAgain}
+                          setFetchAgain={setFetchAgain}
+                          setSocket={setSocket}
+                          socket={socket}
+                        />
+                      </Grid>
+                    </>
+                  )}
 
-              {/* ChatBox */}
-              <Grid item lg={9} md={8} sm={6.5} xs={12}>
-                {" "}
-                <ChatBox
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                  setSocket={setSocket}
-                  socket={socket}
-                />
-              </Grid>
-            </Grid>
+                  {/* ChatBox */}
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid container>
+                  {/* MyChats */}
+
+                  <Grid item lg={3} md={4} sm={5.5} xs={12} >
+                    {" "}
+                    <MyChats
+                      fetchAgain={fetchAgain}
+                      setFetchAgain={setFetchAgain}
+                    />{" "}
+                  </Grid>
+
+                  {/* ChatBox */}
+                  <Grid item lg={9} md={8} sm={6.5} xs={12}>
+                    {" "}
+                    <ChatBox
+                      fetchAgain={fetchAgain}
+                      setFetchAgain={setFetchAgain}
+                      setSocket={setSocket}
+                      socket={socket}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            )}
           </Box>
         </>
       ) : (
