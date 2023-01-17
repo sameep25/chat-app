@@ -16,13 +16,16 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
+// MUI STYLED COMPONENTS
 const Container = styled(Box)`
   background: #0a1929;
   margin: 0.5em;
   color: white;
   height: 100%;
-  overflow-y: scroll;
-  border-radius : 3px ;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
 `;
 const Header = styled(Box)`
   display: flex;
@@ -39,10 +42,8 @@ const StyledButton = styled(Button)`
   font-family: work sans;
 `;
 
-const MyChats = ({fetchAgain }) => {
-  const [loggedUser, setLoggedUser] = useState();
-  const { user, token, chats, setChats} =
-    useContext(ChatContext);
+const MyChats = ({ fetchAgain, setFetchAgain }) => {
+  const { token, chats, setChats } = useContext(ChatContext);
 
   // Alert Utils
   const [loading, setLoading] = useState(false);
@@ -54,6 +55,10 @@ const MyChats = ({fetchAgain }) => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchChats();
+  }, [fetchAgain]);
 
   // gruop chat modal
   const [openModal, setOpenModal] = useState(false);
@@ -73,23 +78,20 @@ const MyChats = ({fetchAgain }) => {
       setAlertType("error");
     }
   };
-  useEffect(() => {
-    setLoggedUser(user);
-    fetchChats();
-  }, [fetchAgain]);
 
   return (
     <>
       <Container>
-        
-        {/* Heading */}
         <Header>
+          {/* Heading */}
           <Typography
             variant="h5"
             sx={{ fontFamily: "work sans", marginRight: "auto" }}
           >
             My Chats
           </Typography>
+
+          {/*Open new Group Modal*/}
           <StyledButton onClick={() => setOpenModal(true)} size="small">
             New Group Chat
             <AddIcon fontSize="small" />
@@ -97,10 +99,18 @@ const MyChats = ({fetchAgain }) => {
         </Header>
 
         {/* List of Chats */}
-        <Box sx={{ marginLeft: "0.5em" }}>
-          {chats &&
-            chats?.map((chat) => <ChatList key={chat._id} chat={chat} />)}
-        </Box>
+
+        {chats ? (
+          <>
+            <Box sx={{ marginLeft: "0.5em", overflowY: "scroll" }}>
+              {chats?.map((chat) => (
+                <ChatList key={chat._id} chat={chat} />
+              ))}
+            </Box>
+          </>
+        ) : (
+          <>loadinf</>
+        )}
       </Container>
 
       <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>

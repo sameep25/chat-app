@@ -5,9 +5,9 @@ import { getSenderName } from "../../config/ChatLogics";
 import EditGroupChatModal from "./groupChat/EditGroupChatModal";
 import GroupDetailsModal from "./groupChat/GroupDetailsModal";
 import ProfileModal from "../miscellaneous/ProfileModal";
-import { getSenderUser } from "../../config/ChatLogics";
+import { getSenderUser , getSenderPicture } from "../../config/ChatLogics";
 
-import { Box, Typography, styled, IconButton, Tooltip } from "@mui/material";
+import { Box, Typography, styled, IconButton, Tooltip ,Avatar } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
@@ -18,7 +18,7 @@ const Header = styled(Box)`
   border-bottom: 1px solid #2e3b49;
   padding: 0.25em 0 0.25em 0;
   width: auto;
-  height:fit-content ;
+  height: fit-content;
   background: #0a1929;
   color: white;
 `;
@@ -30,9 +30,9 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
   const [openGroupModal, setOpenGroupModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
-  const setChatState = () =>{
-    setSelectedChat() 
-  }
+  const setChatState = () => {
+    setSelectedChat();
+  };
 
   return (
     <>
@@ -49,17 +49,15 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
               <ArrowBackIcon />
             </IconButton>
 
-            {/* chat name */}
-            <Typography fontFamily={"work sans"} variant="h5">
-              {selectedChat.isGroupChat
-                ? selectedChat.chatName
-                : getSenderName(user, selectedChat.users)}
-            </Typography>
-
             {selectedChat.isGroupChat ? (
               // if group chats
-              <> 
-              {/* gruop details */}
+              <>
+                {/* chat name */}
+                <Typography fontFamily={"work sans"} variant="h5">
+                  {selectedChat.chatName}
+                </Typography>
+
+                {/* gruop details */}
                 <Box sx={{ marginLeft: "auto", marginRight: "1em" }}>
                   <Tooltip title="Group Info" arrow>
                     <IconButton
@@ -84,8 +82,8 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
                     <></>
                   )}
                 </Box>
-              
-              {/* gruop details modal */}
+
+                {/* gruop details modal */}
                 <GroupDetailsModal
                   chat={selectedChat}
                   open={openGroupModal}
@@ -105,6 +103,16 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
             ) : (
               // if seingle chat
               <>
+                <Avatar
+                  src={getSenderPicture(user, selectedChat.users)}
+                  sx={{ width: 32, height: 32 , marginRight:"0.5em"}}
+                ></Avatar>
+
+                {/* chat name */}
+                <Typography fontFamily={"work sans"} variant="h5">
+                  {getSenderName(user, selectedChat.users)}
+                </Typography>
+
                 {/* Single User Profile Info */}
                 <Box sx={{ marginLeft: "auto", marginRight: "1em" }}>
                   <Tooltip title="User-Info" arrow>

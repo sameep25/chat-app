@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { searchUserApi } from "../../service/userApi";
@@ -19,6 +19,7 @@ import {
   Alert,
 } from "@mui/material";
 
+// MUI STYLED COMPONENTS
 const CustomDrawer = styled(Drawer)`
   & .MuiPaper-root {
     width: 40vh;
@@ -139,6 +140,7 @@ const SideDrawer = (props) => {
     <>
       <CustomDrawer anchor={"left"} open={props.open} onClose={props.close}>
         <Title> Search Users </Title>
+        {/* Search Users */}
         <Box sx={{ display: "flex" }}>
           <Search>
             <StyledInputBase
@@ -165,6 +167,7 @@ const SideDrawer = (props) => {
         )}
       </CustomDrawer>
 
+      {/* Alerts */}
       <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
         <Alert severity={alertType} sx={{ width: "100%" }}>
           {alertTitle}

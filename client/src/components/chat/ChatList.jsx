@@ -7,8 +7,9 @@ import {
   getSenderPicture,
 } from "../../config/ChatLogics";
 
-import { Box, Avatar, Typography, styled, Badge } from "@mui/material";
+import { Box, Avatar, Typography, styled } from "@mui/material";
 
+// MUI STYLED COMPONENTS
 const Container = styled(Box)`
   display: flex;
   align-items: center;
@@ -28,37 +29,38 @@ const TextContainer = styled(Box)`
 `;
 
 const ChatList = ({ chat }) => {
-  const { setSelectedChat, selectedChat, user } = useContext(ChatContext);
-
-  const changeState = () =>{
-    setSelectedChat(chat);
-  }
+  const { setSelectedChat, selectedChat, user, chats } =
+    useContext(ChatContext);
 
   return (
-    <Container
-      bgcolor={selectedChat === chat ? "#2e3b49" : "#0a1929"}
-      onClick={changeState}
-    >
-      <Avatar
-        src={
-          !chat.isGroupChat
-            ? getSenderPicture(user, chat.users)
-            : chat.groupAdmin.picture
-        }
-        sx={{ width: 32, height: 32 }}
-      ></Avatar>
+    <>
+      <Container
+        bgcolor={selectedChat === chat ? "#2e3b49" : "#0a1929"}
+        onClick={() => setSelectedChat(chat)}
+      >
+        <Avatar
+          src={
+            !chat.isGroupChat
+              ? getSenderPicture(user, chat.users)
+              : chat.groupAdmin.picture
+          }
+          sx={{ width: 32, height: 32 }}
+        ></Avatar>
 
-      <TextContainer>
-        <Typography sx={{ fontSize: "100%" }}>
-          {!chat.isGroupChat ? getSenderName(user, chat.users) : chat.chatName}{" "}
-        </Typography>
-        <Typography sx={{ fontSize: "60%" }}>
-          {!chat.isGroupChat
-            ? getSenderEmail(user, chat.users)
-            : `Admin : ${chat.groupAdmin.email}`}
-        </Typography>
-      </TextContainer>
-    </Container>
+        <TextContainer>
+          <Typography sx={{ fontSize: "100%" }}>
+            {!chat.isGroupChat
+              ? getSenderName(user, chat.users)
+              : chat.chatName}{" "}
+          </Typography>
+          <Typography sx={{ fontSize: "60%" }}>
+            {!chat.isGroupChat
+              ? getSenderEmail(user, chat.users)
+              : `Admin : ${chat.groupAdmin.email}`}
+          </Typography>
+        </TextContainer>
+      </Container>
+    </>
   );
 };
 

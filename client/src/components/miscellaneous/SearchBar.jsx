@@ -4,6 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import SideDrawer from "../sideDrawer/SideDrawer";
 
+// MUI STYLED COMPONENTS
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -49,6 +50,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const SearchBar = () => {
+
   //side-drawer utils
   const [openDrawer, setOpenDrawer] = useState(false);
   const [search, setSearch] = useState("");
@@ -71,7 +73,6 @@ const SearchBar = () => {
       <SideDrawer
         open={openDrawer}
         close={() => setOpenDrawer(false)}
-        // search={search}
       />
     </>
   );

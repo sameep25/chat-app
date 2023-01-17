@@ -9,14 +9,12 @@ import {
   Box,
   styled,
   IconButton,
-  Badge,
   Avatar,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Logout from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
@@ -33,16 +31,8 @@ const StyledMenu = styled(Menu)`
 `;
 const UserMenu = () => {
   const navigate = useNavigate();
-  const { user, setUser ,notifications ,setNotifications } = useContext(ChatContext);
-  // console.log("Menu USer : " ,user);
-
-  // handing notefication menu
-  const [notificationMenu, setNotificationMenu] = useState(null);
-  const notificationOpen = Boolean(notificationMenu);
-  const handleNotificationMenu = (event) => {
-    setNotificationMenu(event.currentTarget);
-  };
-
+  const { user, setUser ,setSelectedChat,setChats } = useContext(ChatContext);
+  
   // handling account menu
   const [accountMenu, setAccountMenu] = useState(null);
   const accountOpen = Boolean(accountMenu);
@@ -52,7 +42,6 @@ const UserMenu = () => {
 
   // close menu-list
   const handleClose = () => {
-    setNotificationMenu(null);
     setAccountMenu(null);
   };
 
@@ -60,6 +49,8 @@ const UserMenu = () => {
   const logoutUser = () => {
     localStorage.removeItem("userInfo");
     setUser(null);
+    setSelectedChat() ;
+    setChats([]) ;
     navigate("/");
   };
 
@@ -68,33 +59,6 @@ const UserMenu = () => {
 
   return (
     <Box sx={{ marginLeft: "auto" }}>
-      {/* Notifications Button */}
-      <IconButton
-        size="large"
-        color="inherit"
-        onClick={handleNotificationMenu}
-      >
-        <Badge badgeContent={notifications.length} color="error">
-          <NotificationsIcon />
-        </Badge>
-      </IconButton>
-
-      {/* Notifications Menu*/}
-      <StyledMenu
-        anchorEl={notificationMenu}
-        open={notificationOpen}
-        onClose={handleClose}
-      >
-        {
-          notifications && notifications?.map((notification) =>(
-            <MenuItem key={notification._id} onClick={handleClose}> {notification.content} </MenuItem>
-          ))
-        }
-        {/* <MenuItem onClick={handleClose}>1</MenuItem>
-        <MenuItem onClick={handleClose}>2</MenuItem>
-        <MenuItem onClick={handleClose}>3</MenuItem> */}
-      </StyledMenu>
-
       {/* Account Menu button */}
       <IconButton size="small" sx={{ ml: 2 }} onClick={handleAccountMenu}>
         <Avatar src={user.picture} sx={{ width: 32, height: 32 }}></Avatar>

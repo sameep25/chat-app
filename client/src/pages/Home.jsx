@@ -6,14 +6,15 @@ import { Box, Grid, Typography, styled, Button } from "@mui/material";
 import Login from "../components/authentication/Login";
 import Signup from "../components/authentication/Signup";
 
+
+// MUI STYLED COMPONENTS
 const CustomBox = styled(Box)`
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 0.5em;
   background: white;
-  width: 100%;
   border-radius: 5px;
-  margin: 10px 0 12px 0;
+  margin: 1em 0 1em 0;
 `;
 const TitleText = styled(Typography)`
   font-size: xx-large;
@@ -24,6 +25,10 @@ const LoginBox = styled(Box)`
   min-width: 50%;
   justify-content: center;
   border-radius: 40px;
+  :hover {
+    cursor: pointer;
+    background: #8cc6ff;
+  }
 `;
 const CustomButton = styled(Button)`
   width: 100%;
@@ -33,15 +38,15 @@ const CustomButton = styled(Button)`
 `;
 const Container = styled(Box)`
   display: flex;
-  padding: 10px;
+  padding: 0.5em;
   background: white;
-  width: 100%;
-  margin: 40px 0 12px 0;
   border-radius: 5px;
 `;
 
 const Home = () => {
   const navigate = useNavigate();
+
+  // getting userInfo from local storage
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo")); // parse since data in stringify format
 
@@ -50,6 +55,7 @@ const Home = () => {
     }
   }, []);
 
+  //  login and signup tab
   const [loginTab, setLoginTab] = useState(true);
   const handleLoginTab = (e) => {
     if (e.target.name === "login") setLoginTab(true);
@@ -57,14 +63,18 @@ const Home = () => {
   };
 
   return (
-    <Grid justifyContent={"center"} container spacing={2}>
-      <Grid item lg={6} sm={10} xs={10}>
+    <Grid justifyContent={"center"}  container >
+      <Grid item lg={6} md={7} sm={8} xs={10}>
+        
         <CustomBox>
           <TitleText>Chat-Skoot</TitleText>
         </CustomBox>
 
+        {/* login and sinup */}
         <CustomBox sx={{ marginBottom: "1px" }}>
-          <LoginBox sx={{ ":hover": { background: "#8cc6ff" } }}>
+          
+          {/* login tab */}
+          <LoginBox bgcolor={loginTab ? "#8cc6ff" : "white"} >
             <CustomButton
               name="login"
               onClick={(e) => handleLoginTab(e)}
@@ -74,7 +84,8 @@ const Home = () => {
             </CustomButton>
           </LoginBox>
 
-          <LoginBox sx={{ ":hover": { background: "#8cc6ff" } }}>
+          {/* signup tab */}
+          <LoginBox bgcolor={!loginTab ? "#8cc6ff" : "white"}>
             <CustomButton
               name="signup"
               onClick={(e) => handleLoginTab(e)}

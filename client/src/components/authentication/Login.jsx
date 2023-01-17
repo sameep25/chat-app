@@ -18,12 +18,15 @@ import {
   Alert,
 } from "@mui/material";
 
+// MUI STYLED COMPONENTS
 const CustomFormControl = styled(FormControl)`
   margin: 1em;
   & > div {
     margin-top: 0px;
   }
 `;
+
+// Login Default Inputs
 const defaultUser = {
   email: "",
   password: "",
@@ -34,14 +37,18 @@ const guestUser = {
 };
 
 const Login = () => {
+
   const navigate = useNavigate();
-  const { setUser } = useContext(ChatContext);
+  const { setUser ,setToken } = useContext(ChatContext);
 
   const [userDetails, setUserDetails] = useState(defaultUser);
+
+  //handling inputs
   const handleChanges = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   };
 
+  // handling password hide
   const [show, setShow] = useState(false);
   const handleShowPassword = () => {
     setShow(!show);
@@ -52,7 +59,7 @@ const Login = () => {
     setUserDetails(guestUser);
   };
 
-  // alert
+  // alert-utils
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
   const [alertTitle, setAlertTitle] = useState("");
@@ -66,6 +73,7 @@ const Login = () => {
   // hitting loginUserapi and storing data in context and local-storage
   const loginUser = async () => {
     setLoading(true);
+    setAlertTitle("Logging in! Please Wait...")
     if (userDetails.email === "" || userDetails.password === "") {
       setAlertType("warning");
       setAlertTitle("Please fill all the fields");
@@ -80,6 +88,7 @@ const Login = () => {
 
       localStorage.setItem("userInfo", JSON.stringify(data)); //storing user details in localStorage
       setUser(data.user);
+      setToken(data.token) ;
       navigate("/chats");
     } catch (error) {
       setAlertTitle(error.response.data.message);
@@ -90,6 +99,7 @@ const Login = () => {
   return (
     <>
       <FormGroup sx={{ minWidth: "80%", margin: "auto" }}>
+        {/* Email Input */}
         <CustomFormControl required>
           <FormLabel>Email</FormLabel>
           <Box>
@@ -103,6 +113,7 @@ const Login = () => {
           </Box>
         </CustomFormControl>
 
+        {/* Password Input */}
         <CustomFormControl required>
           <FormLabel>Password</FormLabel>
           <Box>
@@ -120,6 +131,7 @@ const Login = () => {
           </Box>
         </CustomFormControl>
 
+        {/* login button container */}
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <LoadingButton
             loading={loading}
@@ -132,6 +144,7 @@ const Login = () => {
           </LoadingButton>
         </Box>
 
+        {/* set guest user button container */}
         <Box
           sx={{ display: "flex", justifyContent: "center", marginTop: "1em" }}
         >
@@ -146,6 +159,7 @@ const Login = () => {
         </Box>
       </FormGroup>
 
+      {/* Alerts */}
       <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
         <Alert severity={alertType} sx={{ width: "100%" }}>
           {alertTitle}

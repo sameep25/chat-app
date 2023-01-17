@@ -51,19 +51,12 @@ const StyledInputBase = styled(InputBase)`
   }
 `;
 
-const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
-  const myRef = useRef(null);
-  const executeScroll = () => myRef.current.scrollIntoView();
-  const { selectedChat, token, notifications, setNotifications } =
-    useContext(ChatContext);
+const ChatingBox = ({ socket, setMessages, messages }) => {
+  const { selectedChat, token } = useContext(ChatContext);
 
   //messages state
-  const [messages, setMessages] = useState([]); //all messages in chat
   const [newMessage, setNewMessage] = useState("");
-
-  // realtime chat animation utils
-  const [typing, setTyping] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  const [room ,setRoom] = useState() ;
 
   //alerts states
   const [chatLoading, setChatLoading] = useState(false);
@@ -77,69 +70,10 @@ const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
     setLoading(false);
   };
 
-  // variabele to compare selected-chat and current chat with other users
-  var selectedChatCompare = selectedChat;
-  useEffect(() => {
-    selectedChatCompare = selectedChat;
-  }, [selectedChat]);
-
-  //recieving message from backend(socket) to either display message or give notification
-  useEffect(() => {
-    socket &&
-      socket.on("message-recieved", (newMessageRecieved) => {
-        if (
-          !selectedChatCompare ||
-          selectedChatCompare._id !== newMessageRecieved.chat._id
-        ) {
-          if (!notifications.includes(newMessageRecieved)) {
-            setNotifications([newMessageRecieved, ...notifications]);
-            setFetchAgain(!fetchAgain);
-          }
-        } else {
-          console.log("message");
-          setMessages([...messages, newMessageRecieved]);
-        }
-      });
-  }, [messages, notifications]);
-
-  socket.on("typing", () => {
-    setIsTyping(true);
-  });
-  socket.on("stop-typing", () => {
-    setIsTyping(false);
-  });
-
-  //fetching messsages
+  //fetching messsages as selected chat changes
   useEffect(() => {
     fetchMessages();
-    executeScroll();
   }, [selectedChat]);
-
-  //handeling message typing to give typing animation
-  const typingHandler = (e) => {
-    setNewMessage(e.target.value);
-
-    if (!socketConnected) return;
-
-    if (!typing) {
-      setTyping(true);
-      socket && socket.emit("typing", selectedChat._id);
-    }
-
-    //stop typing after 3 sec
-    var lastTypingTime = new Date().getTime();
-    var timerLength = 4000;
-    setTimeout(() => {
-      console.log("time out called");
-      var timeNow = new Date().getTime();
-      var timeDiff = timeNow - lastTypingTime;
-
-      if (timeDiff >= timerLength) {
-        socket && socket.emit("stop-typing", selectedChat._id);
-        setTyping(false);
-      }
-    }, timerLength);
-  };
 
   //featching messages of a chat
   const fetchMessages = async () => {
@@ -157,7 +91,11 @@ const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
       setChatLoading(false);
 
       // making a room with chat id
+      if(room){
+        socket && socket.emit("leave-room" ,room) ;
+      }
       socket && socket.emit("join-Chat", selectedChat._id);
+      setRoom(selectedChat._id) ;
       return;
     } catch (error) {
       setLoading(true);
@@ -169,7 +107,6 @@ const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
   // send a new message
   const sendMessage = async (e) => {
     e.preventDefault();
-    socket.emit("stop-typing", selectedChat._id);
     let message = newMessage.trim();
     if (!message) {
       setLoading(true);
@@ -184,20 +121,10 @@ const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
         },
       };
       setNewMessage("");
-      const { data } = await sendMessageApi(
-        {
-          chatId: selectedChat._id,
-          content: message,
-        },
-        config
-      );
-      // console.log(data);
-
+      const { data } = await sendMessageApi({chatId: selectedChat._id, content: message },config);
       //sending messages to every user in room
       socket.emit("new-message", data);
-
       setMessages([...messages, data]);
-      executeScroll();
       return;
     } catch (error) {
       setLoading(true);
@@ -229,23 +156,6 @@ const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
                   index={index}
                 />
               ))}
-            <Typography
-              sx={{ background: "#0a1929", height: "5px" }}
-              ref={myRef}
-            ></Typography>
-            {isTyping ? (
-              <div>
-                {" "}
-                <Lottie
-                  animationData={animationData}
-                  style={{ width: 70 }}
-                  loop={true}
-                  autoplay={true}
-                />{" "}
-              </div>
-            ) : (
-              <></>
-            )}
           </MessagesContainer>
 
           {/* new message input*/}
@@ -258,8 +168,7 @@ const ChatingBox = ({ socket, socketConnected, fetchAgain, setFetchAgain }) => {
               value={newMessage}
               maxRows={"1"}
               placeholder="Type a message..."
-              onChange={typingHandler}
-              // onChange={(e) => setNewMessage(e.target.value)}
+              onChange={(e) => setNewMessage(e.target.value)}
             />
             <IconButton
               sx={{ color: "whitesmoke" }}

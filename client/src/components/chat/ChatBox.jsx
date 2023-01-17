@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 
@@ -21,14 +21,17 @@ const Container = styled(Box)`
 `;
 // display={selectedChat ? "flex" : "none"}
 
-const ChatBox = ({
-  fetchAgain,
-  setFetchAgain,
-  socket,
-  setSocket,
-  socketConnected,
-}) => {
+const ChatBox = ({ fetchAgain, setFetchAgain, socket, setSocket }) => {
   const { selectedChat } = useContext(ChatContext);
+  const [messages, setMessages] = useState([]); //all messages in chat
+
+  //recieving message from backend(socket) to either display message or give notification
+  useEffect(() => {
+    socket &&
+      socket.on("message-recieved", (newMessageRecieved) => {
+        setMessages([...messages, newMessageRecieved]);
+      });
+  });
 
   return (
     <>
@@ -44,7 +47,8 @@ const ChatBox = ({
               setSocket={setSocket}
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
-              socketConnected={socketConnected}
+              messages={messages}
+              setMessages={setMessages}
             />
           </Container>
         </>

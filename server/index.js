@@ -40,12 +40,11 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   // console.log("connected to socket.io with socket-id: ", socket.id);
 
-  // creating a new room with user-data
-  socket.on("setup", (userData) => {
-    console.log("setup");
-    socket.join(userData._id);
-    socket.emit("connection");
-  });
+  //leaving previous room
+  socket.on("leave-room" ,(room) =>{
+    // console.log("room left : " ,room);
+    socket.leave(room) ;
+  })
 
   //joining a chat with chatId
   socket.on("join-Chat", (room) => {
@@ -58,29 +57,8 @@ io.on("connection", (socket) => {
     var chat = newMessageRecieved.chat;
 
     if (!chat.users) return console.log("chat.users is not defined");
-
-    console.log("messaegs");
-    chat.users.forEach((user) => {
-      if (user._id === newMessageRecieved.sender._id) return;
-      //sending message to user._id room to everyone except user himself
-      //in means inside that user room
-      socket.in(user._id).emit("message-recieved", newMessageRecieved);
-      // console.log("sender:",newMessageRecieved.sender.name , "---> reciever:" ,user.name ,);
-    });
+    socket.to(newMessageRecieved.chat._id).emit("message-recieved", newMessageRecieved) ;
   });
-
-  socket.on("typing", (room) => {
-    socket.in(room).emit("typing");
-  });
-
-  socket.on("stop-typing", (room) => {
-    socket.in(room).emit("stop-typing");
-  });
-
-  socket.off("setup", () =>{
-    console.log("USER DISSCONNECTED");
-    socket.leave(userData._id)
-  })
 
 });
 

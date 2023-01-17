@@ -3,11 +3,7 @@ import { Box, styled } from "@mui/system";
 import { useContext } from "react";
 
 import { ChatContext } from "../../../context/ChatProvider";
-import {
-  isLastMessage,
-  isSameSender,
-  isFirstMessage,
-} from "../../../config/ChatLogics";
+import { isFirstMessage } from "../../../config/ChatLogics";
 
 const SenderBox = styled(Box)`
   display: flex;
@@ -29,13 +25,11 @@ const MessageText = styled(Typography)`
   overflow-wrap: break-word;
   font-family: work sans;
 `;
-
 const SenderName = styled(Typography)`
-font-family: work sans;
-font-size: 0.7rem;
-color: aquamarine;
-
-`
+  font-family: work sans;
+  font-size: 0.7rem;
+  color: aquamarine;
+`;
 
 const Messages = ({ message, messages, index }) => {
   const { user } = useContext(ChatContext);
@@ -56,8 +50,10 @@ const Messages = ({ message, messages, index }) => {
               {isFirstMessage(messages, index) ? (
                 <>
                   <ReceiverBox>
-                    <MessageText sx={{ background: "#2e3b49" ,marginTop:"0.5em"}}>
-                      <SenderName >{message.sender.name}</SenderName>
+                    <MessageText
+                      sx={{ background: "#2e3b49", marginTop: "0.5em" }}
+                    >
+                      <SenderName>{message.sender.name}</SenderName>
                       {message.content}
                     </MessageText>
                   </ReceiverBox>

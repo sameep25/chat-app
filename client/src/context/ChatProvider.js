@@ -9,7 +9,6 @@ const ChatProvider = ({ children }) => {
   const [token, setToken] = useState(""); // logged in user - jwt token
   const [chats, setChats] = useState([]); // logged in user chats
   const [selectedChat, setSelectedChat] = useState(); //
-  const [notifications, setNotifications] = useState([]); // notifications
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo")); // parse since data in stringify format
@@ -30,12 +29,11 @@ const ChatProvider = ({ children }) => {
         user,
         setUser,
         token,
+        setToken,
         selectedChat,
         setSelectedChat,
         chats,
         setChats,
-        notifications,
-        setNotifications,
       }}
     >
       {children}

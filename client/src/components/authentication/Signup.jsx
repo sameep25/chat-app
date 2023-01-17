@@ -20,7 +20,7 @@ import {
 
 // MUI Custom Components
 const CustomFormControl = styled(FormControl)`
-  margin: 1em;
+  margin: 0.5em;
   & > div {
     margin-top: 0px;
   }
@@ -39,11 +39,11 @@ const defaultUser = {
 const Signup = () => {
   const { setUser } = useContext(ChatContext);
   const navigate = useNavigate();
+
   // handling user inputs
   const [userDetails, setUserDetails] = useState(defaultUser);
   const handleChanges = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
-    // console.log(userDetails);
   };
 
   // password utils
@@ -52,7 +52,7 @@ const Signup = () => {
     setShow(!show);
   };
 
-  //pic utils
+  //alerts utils
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
   const [alertTitle, setAlertTitle] = useState("");
@@ -66,6 +66,8 @@ const Signup = () => {
   // uploading picture to cloudinary
   const picHandle = async (e) => {
     setLoading(true);
+    setAlertType("info");
+    setAlertTitle("Uploading Image ! Please wait ...");
     const pic = e.target.files[0];
 
     if (pic === undefined) {
@@ -77,8 +79,8 @@ const Signup = () => {
     if (pic.type === "image/jpeg" || pic.type === "image/png") {
       const data = new FormData();
       data.append("file", pic);
-      data.append("upload_preset", "chat-skoot");
-      data.append("cloud_name", "sameepVishwakarma");
+      data.append("upload_preset", "chat-skoot");     // cloundinary upload preset
+      data.append("cloud_name", "sameepVishwakarma"); // cloundinary cloud name
 
       let response = await uploadImageApi(data);
       if (response.status === 200) {
@@ -89,7 +91,7 @@ const Signup = () => {
         setAlertType("error");
         setAlertTitle("Failed to upload image - Try Again ");
       }
-    } else {
+    } else { // selected file is not image file
       setAlertType("warning");
       setAlertTitle("Please select an image file!");
     }
@@ -100,6 +102,7 @@ const Signup = () => {
     setLoading(true);
     const { password, confirmPassword } = userDetails;
 
+    //looping through user details to check if any field is empty
     for (const [key, value] of Object.entries(userDetails)) {
       if (value === "") {
         setAlertType("warning");
@@ -209,7 +212,8 @@ const Signup = () => {
           </LoadingButton>
         </Box>
       </FormGroup>
-
+      
+      {/* Alerts */}
       <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
         <Alert severity={alertType} sx={{ width: "100%" }}>
           {alertTitle}
