@@ -5,13 +5,21 @@ import { getSenderName } from "../../config/ChatLogics";
 import EditGroupChatModal from "./groupChat/EditGroupChatModal";
 import GroupDetailsModal from "./groupChat/GroupDetailsModal";
 import ProfileModal from "../miscellaneous/ProfileModal";
-import { getSenderUser , getSenderPicture } from "../../config/ChatLogics";
+import { getSenderUser, getSenderPicture } from "../../config/ChatLogics";
 
-import { Box, Typography, styled, IconButton, Tooltip ,Avatar } from "@mui/material";
+import {
+  Box,
+  Typography,
+  styled,
+  IconButton,
+  Tooltip,
+  Avatar,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 
+// MUI STYLED COMPONENTS
 const Header = styled(Box)`
   display: flex;
   align-items: center;
@@ -101,11 +109,12 @@ const ChatBoxHeader = ({ fetchAgain, setFetchAgain }) => {
                 />
               </>
             ) : (
-              // if seingle chat
+              // if single chat
               <>
+                {/* User pic */}
                 <Avatar
                   src={getSenderPicture(user, selectedChat.users)}
-                  sx={{ width: 32, height: 32 , marginRight:"0.5em"}}
+                  sx={{ width: 32, height: 32, marginRight: "0.5em" }}
                 ></Avatar>
 
                 {/* chat name */}

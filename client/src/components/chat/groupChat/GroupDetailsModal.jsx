@@ -18,6 +18,7 @@ import {
   Alert,
 } from "@mui/material";
 
+// MUI STYLED COMPONENTS
 const StyledButton = styled(Button)`
   text-transform: none;
   margin: 0 1em 0 1em;
@@ -31,7 +32,6 @@ const StyledButton = styled(Button)`
   //   background:#2e3b49 ;
   // }
 `;
-
 const style = {
   display: "flex",
   flexDirection: "column",
@@ -47,7 +47,6 @@ const style = {
   boxShadow: 18,
   p: 2,
 };
-
 const CustomModal = styled(Modal)`
   .MuiBox-root {
     background-color: #001e3c;
@@ -57,6 +56,9 @@ const CustomModal = styled(Modal)`
 const UserListBox = styled(Box)`
   & > div {
     margin: 0.5em;
+    :hover {
+      background: #2e3b49;
+    }
   }
 `;
 

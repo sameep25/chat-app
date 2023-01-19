@@ -17,7 +17,7 @@ const ChatPage = () => {
 
   const navigate = useNavigate();
   const [fetchAgain, setFetchAgain] = useState(false); // to fetch chats again from db
-    
+
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   // if user null navigate to "/"
@@ -36,9 +36,9 @@ const ChatPage = () => {
     setSocket(socketServer);
   }, []);
 
-  //handling window size 
+  //handling window size
   useEffect(() => {
-    handleWindowResize() ;
+    handleWindowResize();
     window.addEventListener("resize", handleWindowResize);
   }, []);
 
@@ -47,30 +47,37 @@ const ChatPage = () => {
     else setIsSmallScreen(true);
   };
 
-
   return (
     <>
       {user ? (
         <>
           <Box sx={{ width: "100%", maxHeight: "100vh" }}>
             <Navbar />
-
+            {/* if small screen*/}
             {isSmallScreen ? (
               <>
                 <Grid container>
+                  {/* if small screen and chat is not selected (show MyChats component) */}
                   {!selectedChat ? (
                     <>
-                      <Grid item lg={3} md={4} sm={5.5} xs={12}  >
+                      <Grid item lg={3} md={4} sm={5.5} xs={12}>
                         {" "}
                         <MyChats
                           fetchAgain={fetchAgain}
-                          setFetchAgain={setFetchAgain}
                         />{" "}
                       </Grid>
                     </>
                   ) : (
                     <>
-                      <Grid item lg={9} md={8} sm={6.5} xs={12} sx={{marginLeft : "0.5em"}}>
+                      {/* if small screen and chat is  selected (show ChatBox component) */}
+                      <Grid
+                        item
+                        lg={9}
+                        md={8}
+                        sm={6.5}
+                        xs={12}
+                        sx={{ marginLeft: "0.5em" }}
+                      >
                         {" "}
                         <ChatBox
                           fetchAgain={fetchAgain}
@@ -81,21 +88,17 @@ const ChatPage = () => {
                       </Grid>
                     </>
                   )}
-
-                  {/* ChatBox */}
                 </Grid>
               </>
             ) : (
               <>
+                {/* if big screen*/}
                 <Grid container>
                   {/* MyChats */}
-
-                  <Grid item lg={3} md={4} sm={5.5} xs={12} >
-                    {" "}
+                  <Grid item lg={3} md={4} sm={5.5} xs={12}>
                     <MyChats
                       fetchAgain={fetchAgain}
-                      setFetchAgain={setFetchAgain}
-                    />{" "}
+                    />
                   </Grid>
 
                   {/* ChatBox */}

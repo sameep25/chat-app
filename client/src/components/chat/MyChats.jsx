@@ -20,11 +20,11 @@ import AddIcon from "@mui/icons-material/Add";
 const Container = styled(Box)`
   background: #0a1929;
   color: white;
-  height: 86vh ;
+  height: 86vh;
   width: 95%;
-  display : flex ;
-  overflow-y : scroll ;
-  margin : 0 0.5em 0.5em 0.5em ;
+  display: flex;
+  overflow-y: scroll;
+  margin: 0 0.5em 0.5em 0.5em;
   border-radius: 3px;
   flex-direction: column;
   scroll-behavior: smooth;
@@ -44,8 +44,8 @@ const StyledButton = styled(Button)`
   font-family: work sans;
 `;
 
-const MyChats = ({ fetchAgain, setFetchAgain }) => {
-  const { token, chats, setChats ,selectedChat } = useContext(ChatContext);
+const MyChats = ({ fetchAgain }) => {
+  const { token, chats, setChats } = useContext(ChatContext);
 
   // Alert Utils
   const [loading, setLoading] = useState(false);
@@ -76,14 +76,14 @@ const MyChats = ({ fetchAgain, setFetchAgain }) => {
       const { data } = await fetchChatsApi(config);
       setChats(data);
     } catch (error) {
-      setAlertTitle("Failed to get chats");
+      setAlertTitle("Failed to get chats! Refresh");
       setAlertType("error");
     }
   };
 
   return (
     <>
-      <Container >
+      <Container>
         <Header>
           {/* Heading */}
           <Typography

@@ -13,7 +13,7 @@ import { Box, Avatar, Typography, styled } from "@mui/material";
 const Container = styled(Box)`
   display: flex;
   align-items: center;
-  margin: 1em 1em 0 1em;
+  margin: 0.5em 1em 0 0.5em;
   border-radius: 4px;
   padding: 4px;
   :hover {
@@ -29,8 +29,7 @@ const TextContainer = styled(Box)`
 `;
 
 const ChatList = ({ chat }) => {
-  const { setSelectedChat, selectedChat, user, chats } =
-    useContext(ChatContext);
+  const { setSelectedChat, selectedChat, user } = useContext(ChatContext);
 
   return (
     <>
@@ -38,6 +37,7 @@ const ChatList = ({ chat }) => {
         bgcolor={selectedChat === chat ? "#2e3b49" : "#0a1929"}
         onClick={() => setSelectedChat(chat)}
       >
+        {/* User or group admin Pic */}
         <Avatar
           src={
             !chat.isGroupChat
@@ -48,11 +48,14 @@ const ChatList = ({ chat }) => {
         ></Avatar>
 
         <TextContainer>
+          {/* User or Group name */}
           <Typography sx={{ fontSize: "100%" }}>
             {!chat.isGroupChat
               ? getSenderName(user, chat.users)
               : chat.chatName}{" "}
           </Typography>
+
+          {/* User or group admin email */}
           <Typography sx={{ fontSize: "60%" }}>
             {!chat.isGroupChat
               ? getSenderEmail(user, chat.users)

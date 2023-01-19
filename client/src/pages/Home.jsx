@@ -6,7 +6,6 @@ import { Box, Grid, Typography, styled, Button } from "@mui/material";
 import Login from "../components/authentication/Login";
 import Signup from "../components/authentication/Signup";
 
-
 // MUI STYLED COMPONENTS
 const CustomBox = styled(Box)`
   display: flex;
@@ -63,18 +62,16 @@ const Home = () => {
   };
 
   return (
-    <Grid justifyContent={"center"}  container >
+    <Grid justifyContent={"center"} container>
       <Grid item lg={6} md={7} sm={8} xs={10}>
-        
         <CustomBox>
           <TitleText>Chat-Skoot</TitleText>
         </CustomBox>
 
-        {/* login and sinup */}
+        {/* login and signup */}
         <CustomBox sx={{ marginBottom: "1px" }}>
-          
           {/* login tab */}
-          <LoginBox bgcolor={loginTab ? "#8cc6ff" : "white"} >
+          <LoginBox bgcolor={loginTab ? "#8cc6ff" : "white"}>
             <CustomButton
               name="login"
               onClick={(e) => handleLoginTab(e)}

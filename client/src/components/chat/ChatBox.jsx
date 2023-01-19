@@ -6,6 +6,7 @@ import { Box, styled, Typography } from "@mui/material";
 import ChatBoxHeader from "./ChatBoxHeader";
 import ChatingBox from "./ChatingBox";
 
+// MUI STYLED COMPONENTS
 const Container = styled(Box)`
   color: white;
   display: flex;
@@ -13,18 +14,17 @@ const Container = styled(Box)`
   overflow-y: scroll;
   scroll-behavior: smooth;
   border-radius: 3px;
-  height: 86vh ;
+  height: 86vh;
   margin-right: 0.5em;
   justify-content: center;
   background: #0a1929;
 `;
-// display={selectedChat ? "flex" : "none"}
 
-const ChatBox = ({ fetchAgain, setFetchAgain, socket, setSocket }) => {
+const ChatBox = ({ fetchAgain, setFetchAgain, socket }) => {
   const { selectedChat } = useContext(ChatContext);
   const [messages, setMessages] = useState([]); //all messages in chat
 
-  //recieving message from backend(socket) to either display message or give notification
+  //recieving message from backend(socket) to either display message 
   useEffect(() => {
     socket &&
       socket.on("message-recieved", (newMessageRecieved) => {
@@ -43,9 +43,6 @@ const ChatBox = ({ fetchAgain, setFetchAgain, socket, setSocket }) => {
             />
             <ChatingBox
               socket={socket}
-              setSocket={setSocket}
-              fetchAgain={fetchAgain}
-              setFetchAgain={setFetchAgain}
               messages={messages}
               setMessages={setMessages}
             />

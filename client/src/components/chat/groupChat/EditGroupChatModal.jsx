@@ -24,18 +24,13 @@ import {
   InputBase,
 } from "@mui/material";
 
+// MUI CUSTOM COMPONENTS
 const StyledButton = styled(Button)`
   text-transform: none;
   margin: 0 1em 0 1em;
   min-width: 18%;
   font-family: work sans;
   font-weight: 600;
-
-  // background-color: #2e3b49;
-  // color: white;
-  // :hover {
-  //   background:#2e3b49 ;
-  // }
 `;
 
 const CustomModal = styled(Modal)`
@@ -81,8 +76,7 @@ const UserListBox = styled(Box)`
 `;
 
 const EditGroupChatModal = (props) => {
-  const { user, chats, setChats, token, selectedChat, setSelectedChat } =
-    useContext(ChatContext);
+  const { token, selectedChat, setSelectedChat } = useContext(ChatContext);
 
   useEffect(() => {
     setSelectedUsers([...selectedChat.users]);
@@ -102,11 +96,6 @@ const EditGroupChatModal = (props) => {
     }
   }, [props.open]);
 
-  // console.log("searchResult", searchResult);
-  // console.log("selectedUsers : ", selectedUsers);
-  // console.log("groupChatname : ", groupChatname);
-  // console.log("selectedChat._id : ", selectedChat._id);
-
   //   Alert
   const [loading, setLoading] = useState(false);
   const [alertType, setAlertType] = useState("info");
@@ -118,7 +107,7 @@ const EditGroupChatModal = (props) => {
     setLoading(false);
   };
 
-  //seraching user from db to add to group
+  //seraching users from db to add to group
   const handleSerach = async (query) => {
     setSearch(query);
     if (!query) return;
@@ -143,7 +132,7 @@ const EditGroupChatModal = (props) => {
     }
   };
 
-  //add user to group
+  //add users to group
   const handleAddUser = async (userToAdd) => {
     if (selectedChat.users.find((user) => user._id === userToAdd._id)) {
       setLoading(true);
@@ -246,6 +235,7 @@ const EditGroupChatModal = (props) => {
     }
   };
 
+  // delete Group
   const deleteGroup = async () => {
     try {
       setLoading(true);
@@ -358,6 +348,7 @@ const EditGroupChatModal = (props) => {
         </Box>
       </CustomModal>
 
+      {/* Alerts */}
       <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
         <Alert severity={alertType} sx={{ width: "100%" }}>
           {alertTitle}

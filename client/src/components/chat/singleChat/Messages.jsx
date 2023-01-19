@@ -1,10 +1,10 @@
-import { Typography } from "@mui/material";
-import { Box, styled } from "@mui/system";
+import { Typography ,Box, styled} from "@mui/material";
 import { useContext } from "react";
 
 import { ChatContext } from "../../../context/ChatProvider";
 import { isFirstMessage } from "../../../config/ChatLogics";
 
+// MUI STYLED COMPONENTS
 const SenderBox = styled(Box)`
   display: flex;
   flex-direction: column;

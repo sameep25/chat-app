@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect , useRef } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 
 import { ChatContext } from "../../context/ChatProvider";
 import { fetchMessagesApi, sendMessageApi } from "../../service/messagesApi";
@@ -51,10 +51,10 @@ const StyledInputBase = styled(InputBase)`
 const ChatingBox = ({ socket, setMessages, messages }) => {
   const { selectedChat, token } = useContext(ChatContext);
 
-  const scrollRef = useRef() ;
+  const scrollRef = useRef();
   //messages state
   const [newMessage, setNewMessage] = useState("");
-  const [room, setRoom] = useState(); //for storing current room 
+  const [room, setRoom] = useState();
 
   //alerts states
   const [chatLoading, setChatLoading] = useState(false);
@@ -70,43 +70,47 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
 
   //fetching messsages as selected chat changes
   useEffect(() => {
+    setRoom(selectedChat._id);
     fetchMessages();
   }, [selectedChat]);
-  
 
-    //featching messages of a chat
-    const fetchMessages = async () => {
-      if (!selectedChat) return;
-      try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        setChatLoading(true);
-        const { data } = await fetchMessagesApi(config, selectedChat._id);
-        // console.log(data);
-        setMessages(data);
-        setChatLoading(false);
-  
-        // leaving previouly connected room
-        if (room) {
-          socket && socket.emit("leave-room", room);
-        }
-        // making a room with chat id
-        socket && socket.emit("join-Chat", selectedChat._id);
-        setRoom(selectedChat._id);
-        return;
-      } catch (error) {
-        setLoading(true);
-        setAlertTitle("Failed to Fetch Chats : Refresh !");
-        setAlertType("error");
-      }
-    };
+  // console.log(room);
 
-    useEffect(() =>{
-      scrollRef.current.scrollIntoView() ;
-    },[messages])
+  //featching messages of a chat
+  const fetchMessages = async () => {
+    if (!selectedChat) return;
+
+    // leaving previouly connected room
+    if (room && room !== selectedChat._id) {
+      // console.log("leave room called" ,);
+      socket && socket.emit("leave-room", room);
+    }
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      setChatLoading(true);
+      const { data } = await fetchMessagesApi(config, selectedChat._id);
+      // console.log(data);
+      setMessages(data);
+      setChatLoading(false);
+
+      // making a room with chat id
+      socket && socket.emit("join-Chat", selectedChat._id);
+      return;
+    } catch (error) {
+      setLoading(true);
+      setAlertTitle("Failed to Fetch Chats : Refresh !");
+      setAlertType("error");
+    }
+  };
+
+  useEffect(() => {
+    scrollRef.current.scrollIntoView();
+  }, [messages]);
 
   // send a new message
   const sendMessage = async (e) => {
@@ -153,7 +157,7 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
       ) : (
         <>
           {/* All Messages */}
-          <MessagesContainer  >
+          <MessagesContainer>
             {messages &&
               messages.map((message, index) => (
                 <Messages
@@ -163,12 +167,11 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
                   index={index}
                 />
               ))}
-              <div ref={scrollRef}></div>
+            <div ref={scrollRef}></div>
           </MessagesContainer>
 
           {/* new message input*/}
           <NewMessageContainer>
-
             {/* Input Area */}
             <StyledInputBase
               onKeyDown={(e) => {
@@ -189,7 +192,6 @@ const ChatingBox = ({ socket, setMessages, messages }) => {
             >
               <SendIcon />
             </IconButton>
-
           </NewMessageContainer>
         </>
       )}

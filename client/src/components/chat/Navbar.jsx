@@ -5,6 +5,7 @@ import UserMenu from "../miscellaneous/UserMenu";
 
 import { Box, AppBar, Toolbar, styled, Typography } from "@mui/material";
 
+// MUI CUSTOM COMPONENTS
 const TitleText = styled(Typography)`
   font-size: x-large;
   font-family: work sans;
@@ -15,7 +16,7 @@ const TitleText = styled(Typography)`
 
 const Navbar = () => {
   return (
-    <Box sx={{marginBottom : "0.5em" }} >
+    <Box sx={{ marginBottom: "0.5em" }}>
       <AppBar sx={{ background: "#0a1929" }} position="static">
         <Toolbar>
           <SearchBar />

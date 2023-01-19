@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Avatar, Typography, styled } from "@mui/material";
 
+// MUI STYLED COMPONENTS
 const Container = styled(Box)`
   display: flex;
   align-items: center;
@@ -28,8 +29,10 @@ const UserListItem = ({ user, chat, handleFunction }) => {
       <Avatar src={user.picture} sx={{ width: 32, height: 32 }}></Avatar>
       {chat && chat.groupAdmin._id === user._id ? (
         <>
-          <TextContainer >
-            <Typography sx={{ fontSize: "small" }}>{`Admin : ${user.name}`}</Typography>
+          <TextContainer>
+            <Typography
+              sx={{ fontSize: "small" }}
+            >{`Admin : ${user.name}`}</Typography>
             <Typography sx={{ fontSize: "xx-small" }}>{user.email}</Typography>
           </TextContainer>
         </>
